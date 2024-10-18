@@ -12,6 +12,18 @@ public class Restaurant {
     @Column
     private String name;
 
+    public Restaurant() {
+    }
+
+    public Restaurant(String name, long id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public Restaurant(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
