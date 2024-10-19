@@ -10,18 +10,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class apiControllers {
+public class RestaurantApiController {
 
     @Autowired
     private RestaurantRepo restaurantRepo;
 
-    @GetMapping(value = "/")
-    public String getWelcome(){
-        return "Welcome";
-    }
-
     @GetMapping(value = "/restaurants")
-    public List<Restaurant> getRestaurants(){
+    public List<Restaurant> getAllRestaurants(){
         return restaurantRepo.findAll();
     }
 
@@ -30,7 +25,7 @@ public class apiControllers {
         return restaurantRepo.findById(id).get();
     }
 
-    @DeleteMapping(value = "/remove/{id}")
+    @DeleteMapping(value = "/restaurant/remove/{id}")
     public boolean removeRestaurant(@PathVariable("id") long id){
         if(!restaurantRepo.findById(id).equals(Optional.empty())){
             restaurantRepo.deleteById(id);
@@ -39,7 +34,7 @@ public class apiControllers {
         return false;
     }
 
-    @PutMapping(value = "/update/{id}")
+    @PutMapping(value = "/restaurant/update/{id}")
     public Restaurant updateRestaurant(@PathVariable("id") long id, @RequestBody Map<String, String> body){
         Restaurant current= restaurantRepo.findById(id).get();
         current.setName(body.get("name"));
@@ -47,7 +42,7 @@ public class apiControllers {
         return current;
     }
 
-    @PostMapping("/add")
+    @PostMapping(value = "/restaurant/add")
     public Restaurant addRestaurant(@RequestBody Map<String, String> body){
         String name= body.get("name");
         Restaurant newRestaurant= new Restaurant(name);
