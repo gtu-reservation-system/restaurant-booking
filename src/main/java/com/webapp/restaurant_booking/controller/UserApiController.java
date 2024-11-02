@@ -9,23 +9,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RequestMapping("/api/users")
 @RestController
 public class UserApiController {
 
     @Autowired
     private UserRepo userRepo;
 
-    @GetMapping(value = "/users")
+    @GetMapping()
     public List<User> getAllUsers(){
         return userRepo.findAll();
     }
 
-    @GetMapping(value = "user/{id}")
+    @GetMapping(value = "/{id}")
     public User getSingleUser(@PathVariable("id") long id){
         return userRepo.findById(id).get();
     }
 
-    @DeleteMapping(value = "/user/remove/{id}")
+    @DeleteMapping(value = "/{id}")
     public boolean removeUser(@PathVariable("id") long id){
         if(!userRepo.findById(id).equals(Optional.empty())){
             userRepo.deleteById(id);
@@ -34,7 +35,7 @@ public class UserApiController {
         return false;
     }
 
-    @PutMapping(value = "/user/update/{id}")
+    @PutMapping(value = "/{id}")
     public User updateUser(@PathVariable("id") long id, @RequestBody Map<String, String> body){
         User current= userRepo.findById(id).get();
         current.setName(body.get("name"));
@@ -44,7 +45,7 @@ public class UserApiController {
         return current;
     }
 
-    @PostMapping(value = "/user/add")
+    @PostMapping()
     public User addUser(@RequestBody Map<String, String> body){
         String name= body.get("name");
         String email= body.get("email");

@@ -41,7 +41,7 @@ public class ReservationApiController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public boolean removeRestaurant(@PathVariable("id") long id){
+    public boolean removeReservation(@PathVariable("id") long id){
         if(!reservationRepo.findById(id).equals(Optional.empty())){
             reservationRepo.deleteById(id);
             return true;
