@@ -30,7 +30,7 @@ public class ReservationApiController {
     }
 
     @PutMapping("/{id}")
-    public Reservation updateReservation(@PathVariable Long id, @RequestBody Reservation reservationDetails) {
+    public Reservation updateReservation(@PathVariable("id") Long id, @RequestBody Reservation reservationDetails) {
         Reservation reservation = reservationRepo.findById(id).get();
 
         reservation.setReservationTime(reservationDetails.getReservationTime());
@@ -48,4 +48,15 @@ public class ReservationApiController {
         }
         return false;
     }
+
+    @GetMapping("/user/{userId}")
+    public List<Reservation> getReservationsByUser(@PathVariable("userId") Long userId) {
+        return reservationRepo.findByUserId(userId);
+    }
+
+    @GetMapping("/restaurant/{restaurantId}")
+    public List<Reservation> getReservationsByRestaurant(@PathVariable("restaurantId") Long restaurantId) {
+        return reservationRepo.findByRestaurantId(restaurantId);
+    }
+
 }
