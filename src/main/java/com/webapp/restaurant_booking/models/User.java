@@ -2,6 +2,8 @@ package com.webapp.restaurant_booking.models;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class User {
 
@@ -18,6 +20,9 @@ public class User {
     @Column
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Reservation> reservations;
+
     public User() {
     }
 
@@ -32,6 +37,14 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public long getId() {

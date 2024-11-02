@@ -22,6 +22,10 @@ public class Restaurant {
     @JsonIgnore
     private Set<RestaurantTable> restaurantTables;
 
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Reservation> reservations;
+
     public Restaurant() {
     }
 
@@ -36,6 +40,14 @@ public class Restaurant {
         this.name = name;
         this.address = address;
         this.restaurantTables = restaurantTables;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public long getId() {
