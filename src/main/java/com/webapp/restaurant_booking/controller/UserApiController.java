@@ -45,12 +45,15 @@ public class UserApiController {
         return current;
     }
 
-    @PostMapping()
-    public User addUser(@RequestBody Map<String, String> body){
-        String name= body.get("name");
-        String email= body.get("email");
-        String password= body.get("password");
-        User newUser= new User(name, email, password);
+    @PostMapping
+    public User addUser(@RequestBody Map<String, String> body) {
+        String name = body.get("name");
+        String email = body.get("email");
+        String password = body.get("password");
+        if (password.length() < 3 || password.length() > 12) {
+            throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
+        }
+        User newUser = new User(name, email, password);
         return userRepo.save(newUser);
     }
 }
