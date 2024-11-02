@@ -1,6 +1,8 @@
 package com.webapp.restaurant_booking.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -23,7 +25,7 @@ public class Restaurant {
     private Set<RestaurantTable> restaurantTables;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonBackReference
     private Set<Reservation> reservations;
 
     public Restaurant() {

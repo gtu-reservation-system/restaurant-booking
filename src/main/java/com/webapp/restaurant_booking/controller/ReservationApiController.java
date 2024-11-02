@@ -1,12 +1,17 @@
 package com.webapp.restaurant_booking.controller;
 
 import com.webapp.restaurant_booking.models.Reservation;
+import com.webapp.restaurant_booking.models.Restaurant;
+import com.webapp.restaurant_booking.models.RestaurantTable;
+import com.webapp.restaurant_booking.models.User;
 import com.webapp.restaurant_booking.repo.ReservationRepo;
+import com.webapp.restaurant_booking.repo.RestaurantRepo;
+import com.webapp.restaurant_booking.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RequestMapping("/api/reservations")
 @RestController
@@ -14,9 +19,28 @@ public class ReservationApiController {
     @Autowired
     private ReservationRepo reservationRepo;
 
+    @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
+    RestaurantRepo restaurantRepo;
+
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        return reservationRepo.save(reservation);
+    public Reservation addReservation(@RequestBody Map<String, Object> body) {
+        Long restaurantId = ((Number) body.get("restaurantId")).longValue();
+        Long userId = ((Number) body.get("userId")).longValue();
+        String reservationTimeString = (String) body.get("reservationTime");
+        LocalDateTime reservationTime = LocalDateTime.parse(reservationTimeString);
+
+        Restaurant restaurant = restaurantRepo.findById(restaurantId).get();
+        User user = userRepo.findById(userId).get();
+
+        Reservation newReservation = new Reservation();
+        newReservation.setRestaurant(restaurant);
+        newReservation.setUser(user);
+        newReservation.setReservationTime(reservationTime);
+
+        return reservationRepo.save(newReservation);
     }
 
     @GetMapping
