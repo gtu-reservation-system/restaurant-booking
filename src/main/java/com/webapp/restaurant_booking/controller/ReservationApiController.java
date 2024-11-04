@@ -6,9 +6,14 @@ import com.webapp.restaurant_booking.models.RestaurantTable;
 import com.webapp.restaurant_booking.models.User;
 import com.webapp.restaurant_booking.repo.ReservationRepo;
 import com.webapp.restaurant_booking.repo.RestaurantRepo;
+import com.webapp.restaurant_booking.repo.TableRepo;
 import com.webapp.restaurant_booking.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,24 +28,34 @@ public class ReservationApiController {
     private UserRepo userRepo;
 
     @Autowired
-    RestaurantRepo restaurantRepo;
+    private TableRepo tableRepo;
 
+    @Autowired
+    private RestaurantRepo restaurantRepo;
+
+    @Transactional
     @PostMapping
-    public Reservation addReservation(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody Map<String, Object> body) {
         Long restaurantId = ((Number) body.get("restaurantId")).longValue();
         Long userId = ((Number) body.get("userId")).longValue();
-        String reservationTimeString = (String) body.get("reservationTime");
-        LocalDateTime reservationTime = LocalDateTime.parse(reservationTimeString);
+        LocalDateTime reservationTime = LocalDateTime.parse((String) body.get("reservationTime"));
 
         Restaurant restaurant = restaurantRepo.findById(restaurantId).get();
         User user = userRepo.findById(userId).get();
 
-        Reservation newReservation = new Reservation();
-        newReservation.setRestaurant(restaurant);
-        newReservation.setUser(user);
-        newReservation.setReservationTime(reservationTime);
+        RestaurantTable table = restaurant.getTables().stream()
+                .filter(RestaurantTable::isAvailable)
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No available tables at this restaurant."));
 
-        return reservationRepo.save(newReservation);
+        table.setAvailable(false);
+        tableRepo.save(table);
+
+        Reservation newReservation = new Reservation(restaurant, user, reservationTime);
+        newReservation.setTable(table);
+        Reservation savedReservation = reservationRepo.save(newReservation);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
 
     @GetMapping

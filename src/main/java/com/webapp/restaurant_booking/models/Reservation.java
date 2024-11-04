@@ -21,6 +21,10 @@ public class Reservation {
     @JsonManagedReference
     private User user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "table_id")
+    private RestaurantTable table;
+
     private LocalDateTime reservationTime;
 
     public Reservation() {
@@ -69,5 +73,13 @@ public class Reservation {
 
     public void setReservationTime(LocalDateTime reservationTime) {
         this.reservationTime = reservationTime;
+    }
+
+    public RestaurantTable getTable() {
+        return table;
+    }
+
+    public void setTable(RestaurantTable table) {
+        this.table = table;
     }
 }
