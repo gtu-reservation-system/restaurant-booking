@@ -1,59 +1,52 @@
 package com.webapp.restaurant_booking.controller;
 
 import com.webapp.restaurant_booking.models.User;
-import com.webapp.restaurant_booking.repo.UserRepo;
+import com.webapp.restaurant_booking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequestMapping("/api/users")
 @RestController
 public class UserApiController {
 
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
 
     @GetMapping()
-    public List<User> getAllUsers(){
-        return userRepo.findAll();
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping(value = "/{id}")
-    public User getSingleUser(@PathVariable("id") long id){
-        return userRepo.findById(id).get();
+    public User getSingleUser(@PathVariable("id") long id) {
+        return userService.getSingleUser(id).orElse(null);
     }
 
     @DeleteMapping(value = "/{id}")
-    public boolean removeUser(@PathVariable("id") long id){
-        if(!userRepo.findById(id).equals(Optional.empty())){
-            userRepo.deleteById(id);
-            return true;
-        }
-        return false;
+    public boolean removeUser(@PathVariable("id") long id) {
+        return userService.removeUser(id);
     }
 
     @PutMapping(value = "/{id}")
-    public User updateUser(@PathVariable("id") long id, @RequestBody Map<String, String> body){
-        User current= userRepo.findById(id).get();
-        current.setName(body.get("name"));
-        current.setEmail(body.get("email"));
-        current.setPassword(body.get("password"));
-        userRepo.save(current);
-        return current;
+    public User updateUser(@PathVariable("id") long id, @RequestBody Map<String, String> body) {
+        return userService.updateUser(id, body);
     }
 
     @PostMapping
     public User addUser(@RequestBody Map<String, String> body) {
-        String name = body.get("name");
+        return userService.addUser(body);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         String password = body.get("password");
-        if (password.length() < 3 || password.length() > 12) {
-            throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
-        }
-        User newUser = new User(name, email, password);
-        return userRepo.save(newUser);
+
+        User user = userService.login(email, password);
+        return ResponseEntity.ok(user);
     }
 }
