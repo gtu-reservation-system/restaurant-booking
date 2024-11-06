@@ -24,7 +24,7 @@ public class Restaurant {
     @JsonIgnore
     private Set<RestaurantTable> restaurantTables;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private Set<Reservation> reservations;
 
