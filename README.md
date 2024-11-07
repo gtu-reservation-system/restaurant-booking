@@ -55,6 +55,27 @@ Example response:
 }
 ```
 ##
+### Login user:
+```http
+POST /api/users/login
+```
+Request body:
+```json
+{
+    "email": "fatih@gmail.com",
+    "password": "fatih1234"
+}
+```
+Example response:
+```json
+{
+    "id": 3,
+    "name": "Fatih Yıldırım",
+    "email": "fatih@gmail.com",
+    "password": "fatih1234"
+}
+```
+##
 ### Update user:
 ```http
 PUT /api/users/{id}
