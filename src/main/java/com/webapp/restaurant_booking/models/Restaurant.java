@@ -20,6 +20,9 @@ public class Restaurant {
     @Column
     private String address;
 
+    @Column(name = "photo_path")
+    private String photoPath;
+
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<RestaurantTable> restaurantTables;
@@ -42,6 +45,14 @@ public class Restaurant {
         this.name = name;
         this.address = address;
         this.restaurantTables = restaurantTables;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
     public Set<Reservation> getReservations() {

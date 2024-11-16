@@ -5,7 +5,12 @@ import com.webapp.restaurant_booking.models.RestaurantTable;
 import com.webapp.restaurant_booking.repo.RestaurantRepo;
 import com.webapp.restaurant_booking.repo.TableRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 import java.util.HashSet;
 
 import java.util.*;
@@ -18,6 +23,9 @@ public class RestaurantService {
 
     @Autowired
     private TableRepo tableRepo;
+
+    @Autowired
+    private PhotoService photoService;
 
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepo.findAll();
@@ -82,5 +90,28 @@ public class RestaurantService {
         newRestaurant.setTables(restaurantTables);
 
         return restaurantRepo.save(newRestaurant);
+    }
+
+    public Restaurant uploadRestaurantPhoto(Long restaurantId, MultipartFile file) throws IOException {
+        Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurantId);
+        if (restaurantOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found");
+        }
+
+        Restaurant restaurant = restaurantOpt.get();
+        String fileName = photoService.uploadPhoto(file);
+        restaurant.setPhotoPath(fileName);
+        return restaurantRepo.save(restaurant);
+    }
+
+    public byte[] getRestaurantPhoto(Long restaurantId) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant not found"));
+
+        if (restaurant.getPhotoPath() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No photo found for restaurant");
+        }
+
+        return photoService.getPhoto(restaurant.getPhotoPath());
     }
 }
