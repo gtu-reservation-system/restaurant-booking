@@ -27,6 +27,8 @@ public class Reservation {
 
     private LocalDateTime reservationTime;
 
+	private Integer numberOfPeople;
+
     public Reservation() {
     }
 

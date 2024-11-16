@@ -50,13 +50,19 @@ public class UserService {
     }
 
     public User addUser(Map<String, String> body) {
-        String name = body.get("name");
+        String name = body.get("fullName");
         String email = body.get("email");
         String password = body.get("password");
+		String number = body.get("phoneNumber");
+
+		Optional<User> existingUser  = userRepo.findByEmail(email);
+		if (existingUser .isPresent()) {
+			throw new IllegalArgumentException("Email is already in use.");
+		}
         if (password.length() < 3 || password.length() > 12) {
             throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
         }
-        User newUser = new User(name, email, password);
+        User newUser = new User(name, email, password, number);
         return userRepo.save(newUser);
     }
 

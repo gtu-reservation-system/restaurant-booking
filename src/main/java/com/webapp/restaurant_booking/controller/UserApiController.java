@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RequestMapping("/api/users")
 @RestController
 public class UserApiController {
@@ -43,10 +44,17 @@ public class UserApiController {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
+        String email = body.get("emailOrPhone");
         String password = body.get("password");
 
         User user = userService.login(email, password);
         return ResponseEntity.ok(user);
     }
+
+	/*
+	@GetMapping("/search")
+    public List<User> searchUsers(@RequestParam("name") String name) {
+        return userRepo.findByNameContaining(name);
+    }
+	*/
 }

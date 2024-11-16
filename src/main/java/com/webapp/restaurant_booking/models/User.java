@@ -1,10 +1,18 @@
 package com.webapp.restaurant_booking.models;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Set;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -16,11 +24,19 @@ public class User {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column
+	@JsonIgnore
     private String password;
+
+	@Column
+    private String phoneNumber;
+
+	@Column
+	@JsonProperty("role")
+    private String role = "user";
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
@@ -29,17 +45,19 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String email, String password) {
+    public User(long id, String name, String email, String password, String phone_number) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+		this.phoneNumber = phone_number;
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, String phone_number1) {
         this.name = name;
         this.email = email;
         this.password = password;
+		this.phoneNumber = phone_number1;
     }
 
     public Set<Reservation> getReservations() {
@@ -81,4 +99,20 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }
