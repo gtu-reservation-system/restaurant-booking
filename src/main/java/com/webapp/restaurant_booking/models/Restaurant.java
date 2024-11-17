@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,8 +22,10 @@ public class Restaurant {
     @Column
     private String address;
 
+    @ElementCollection
+    @CollectionTable(name = "restaurant_photos", joinColumns = @JoinColumn(name = "restaurant_id"))
     @Column(name = "photo_path")
-    private String photoPath;
+    private List<String> photoPaths = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -47,12 +51,12 @@ public class Restaurant {
         this.restaurantTables = restaurantTables;
     }
 
-    public String getPhotoPath() {
-        return photoPath;
+    public List<String> getPhotoPaths() {
+        return photoPaths;
     }
 
-    public void setPhotoPath(String photoPath) {
-        this.photoPath = photoPath;
+    public void setPhotoPaths(List<String> photoPaths) {
+        this.photoPaths = photoPaths;
     }
 
     public Set<Reservation> getReservations() {

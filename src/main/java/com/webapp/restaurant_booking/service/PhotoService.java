@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class PhotoService {
@@ -19,21 +20,24 @@ public class PhotoService {
     private String uploadDir;
 
     public String uploadPhoto(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
 
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        Path filePath = uploadPath.resolve(fileName);
+        Path filePath = uploadPath.resolve(uniqueFileName);
         Files.copy(file.getInputStream(), filePath);
-
-        return fileName;
+        return uniqueFileName;
     }
 
     public byte[] getPhoto(String filename) throws IOException {
         Path filePath = Paths.get(uploadDir).resolve(filename);
+        if (!Files.exists(filePath)) {
+            throw new IOException("File not found: " + filename);
+        }
         return Files.readAllBytes(filePath);
     }
 }

@@ -93,25 +93,28 @@ public class RestaurantService {
     }
 
     public Restaurant uploadRestaurantPhoto(Long restaurantId, MultipartFile file) throws IOException {
-        Optional<Restaurant> restaurantOpt = restaurantRepo.findById(restaurantId);
-        if (restaurantOpt.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found");
-        }
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
-        Restaurant restaurant = restaurantOpt.get();
-        String fileName = photoService.uploadPhoto(file);
-        restaurant.setPhotoPath(fileName);
-        return restaurantRepo.save(restaurant);
+        String filePath = photoService.uploadPhoto(file);
+        if (restaurant.getPhotoPaths() == null) {
+            restaurant.setPhotoPaths(new ArrayList<>());
+        }
+        restaurant.getPhotoPaths().add(filePath);
+        restaurantRepo.save(restaurant);
+        return restaurant;
     }
 
-    public byte[] getRestaurantPhoto(Long restaurantId) throws IOException {
+    public byte[] getRestaurantPhoto(Long restaurantId, int index) throws IOException {
         Restaurant restaurant = restaurantRepo.findById(restaurantId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "restaurant not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
-        if (restaurant.getPhotoPath() == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No photo found for restaurant");
+        List<String> photoPaths = restaurant.getPhotoPaths();
+        if (index < 0 || index >= photoPaths.size()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo not found");
         }
 
-        return photoService.getPhoto(restaurant.getPhotoPath());
+        String filePath = photoPaths.get(index);
+        return photoService.getPhoto(filePath);
     }
 }
