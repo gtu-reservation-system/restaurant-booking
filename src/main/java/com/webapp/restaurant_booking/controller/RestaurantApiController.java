@@ -50,9 +50,9 @@ public class RestaurantApiController {
         return ResponseEntity.ok(updatedRestaurant);
     }
 
-    @GetMapping(value = "/{id}/photo", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getRestaurantPhoto(@PathVariable Long id) throws IOException {
-        byte[] photo = restaurantService.getRestaurantPhoto(id);
+    @GetMapping(value = "/{id}/photo/{index}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getRestaurantPhoto(@PathVariable Long id, @PathVariable int index) throws IOException {
+        byte[] photo = restaurantService.getRestaurantPhoto(id, index);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
     }
 }
