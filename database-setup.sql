@@ -24,10 +24,10 @@ VALUES
 -- Insert Restaurant Photos
 INSERT INTO restaurant_photos (restaurant_id, photo_path)
 VALUES
-    (1, 'photos/steakhouse1.jpg'),
-    (1, 'photos/steakhouse2.jpg'),
-    (2, 'photos/ocean1.jpg'),
-    (3, 'photos/mountain1.jpg');
+    (1, 'steakhouse1.jpg'),
+    (1, 'steakhouse2.jpg'),
+    (2, 'ocean1.jpg'),
+    (3, 'mountain1.jpg');
 
 -- Insert Tables for Restaurants
 INSERT INTO restaurant_table (id, name, available, restaurant_id)
