@@ -184,6 +184,28 @@ Example response:
 200 OK
 ```
 ##
+### Upload restaurant photo
+```http
+POST /api/restaurants/{id}/photo
+```
+Request body:
+| Key | Value | Description |
+| :- | :- | :- |
+| `file` | `upload file` | optional |
+
+Example response:
+```
+200 OK
+```
+##
+### Get restaurant photo
+```http
+GET /api/restaurants/{restaurantId}/photo/{photoId}
+```
+Example response:
+
+![image](https://github.com/user-attachments/assets/14dbba79-79d8-42e8-8ff4-ac64fb37c4a9)
+##
 ### Delete restaurant
 ```http
 DELETE /api/restaurants/{id}
