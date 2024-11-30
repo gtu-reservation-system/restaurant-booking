@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +35,15 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private Set<Reservation> reservations;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<MenuItem> menuItems = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "restaurant_tags", joinColumns = @JoinColumn(name = "restaurant_id"))
+    @Column(name = "tag")
+    private Set<String> tags = new HashSet<>();
 
     public Restaurant() {
     }
@@ -97,5 +107,21 @@ public class Restaurant {
 
     public void setTables(Set<RestaurantTable> restaurantTables) {
         this.restaurantTables = restaurantTables;
+    }
+
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
+    }
+
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 }

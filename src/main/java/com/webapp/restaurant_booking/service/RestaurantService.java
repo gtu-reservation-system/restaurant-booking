@@ -60,6 +60,11 @@ public class RestaurantService {
             }
             current.setTables(restaurantTables);
 
+            if (body.containsKey("tags")) {
+                List<String> tags = (List<String>) body.get("tags");
+                current.setTags(new HashSet<>(tags));
+            }
+
             restaurantRepo.save(current);
         }
         return current;
@@ -70,10 +75,12 @@ public class RestaurantService {
         String address = (String) body.get("address");
 
         List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
+        List<String> tags = body.get("tags") != null ? (List<String>) body.get("tags") : new ArrayList<>();
 
         Restaurant newRestaurant = new Restaurant();
         newRestaurant.setName(name);
         newRestaurant.setAddress(address);
+        newRestaurant.setTags(new HashSet<>(tags));
 
         Set<RestaurantTable> restaurantTables = new HashSet<>();
         for (Map<String, Object> tableData : tablesData) {
@@ -116,5 +123,17 @@ public class RestaurantService {
 
         String filePath = photoPaths.get(index);
         return photoService.getPhoto(filePath);
+    }
+
+    public List<Restaurant> searchRestaurantsByTag(String tag) {
+        return restaurantRepo.findByTag(tag);
+    }
+
+    public List<Restaurant> searchRestaurantsByName(String name) {
+        return restaurantRepo.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Restaurant> searchRestaurantsByMenuItem(String menuItemName) {
+        return restaurantRepo.findByMenuItemNameContainingIgnoreCase(menuItemName);
     }
 }

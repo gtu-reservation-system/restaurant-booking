@@ -55,4 +55,19 @@ public class RestaurantApiController {
         byte[] photo = restaurantService.getRestaurantPhoto(id, index);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
     }
+
+    @GetMapping("/tag")
+    public List<Restaurant> searchRestaurantsByTag(@RequestParam String tag) {
+        return restaurantService.searchRestaurantsByTag(tag);
+    }
+
+    @GetMapping("/name")
+    public List<Restaurant> searchRestaurantsByName(@RequestParam String name) {
+        return restaurantService.searchRestaurantsByName(name);
+    }
+
+    @GetMapping("/menu-item")
+    public List<Restaurant> searchRestaurantsByMenuItem(@RequestParam String menuItemName) {
+        return restaurantService.searchRestaurantsByMenuItem(menuItemName);
+    }
 }
