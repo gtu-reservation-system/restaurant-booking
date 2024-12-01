@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -40,22 +41,51 @@ public class ReservationService {
         Long userId = ((Number) body.get("userId")).longValue();
         LocalDateTime reservationTime = LocalDateTime.parse((String) body.get("reservationTime"));
 
+        validateReservationTime(reservationTime);
+
         Restaurant restaurant = restaurantRepo.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        RestaurantTable table = restaurant.getTables().stream()
-                .filter(RestaurantTable::isAvailable)
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "No available tables at this restaurant."));
+        RestaurantTable availableTable = findAvailableTable(restaurant, reservationTime);
 
-        table.setAvailable(false);
-        tableRepo.save(table);
+        availableTable.setAvailable(false);
+        tableRepo.save(availableTable);
 
         Reservation newReservation = new Reservation(restaurant, user, reservationTime);
-        newReservation.setTable(table);
+        newReservation.setTable(availableTable);
         return reservationRepo.save(newReservation);
+    }
+
+    private void validateReservationTime(LocalDateTime reservationTime) {
+        LocalDateTime now = LocalDateTime.now();
+        if (reservationTime.isBefore(now)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation time cannot be in the past");
+        }
+        if (reservationTime.isAfter(now.plusMonths(1))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservations can only be made up to 1 month in advance");
+        }
+    }
+
+    private RestaurantTable findAvailableTable(Restaurant restaurant, LocalDateTime reservationTime) {
+        List<RestaurantTable> availableTables = restaurant.getTables().stream()
+                .filter(RestaurantTable::isAvailable)
+                .filter(table -> isTableAvailableAtTime(table, reservationTime))
+                .collect(Collectors.toList());
+
+        if (availableTables.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No available tables at this restaurant and time.");
+        }
+
+        return availableTables.get(0);
+    }
+
+    private boolean isTableAvailableAtTime(RestaurantTable table, LocalDateTime reservationTime) {
+        List<Reservation> existingReservations = reservationRepo.findReservationsByRestaurantAndTime(table.getRestaurant().getId(), reservationTime);
+
+        return existingReservations.stream()
+                .noneMatch(r -> r.getTable().getId() == table.getId());
     }
 
     public List<Reservation> getAllReservations() {
