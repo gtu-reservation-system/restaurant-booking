@@ -66,13 +66,22 @@ public class UserService {
         return userRepo.save(newUser);
     }
 
-    public User login(String email, String password) {
-        Optional<User> userOpt = userRepo.findByEmail(email);
-        User current = userOpt.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email"));
+    public User login(String identifier, String password) {
+        Optional<User> userOpt;
+
+        if (identifier.contains("@")) {
+            userOpt = userRepo.findByEmail(identifier);
+        } else {
+            userOpt = userRepo.findByPhoneNumber(identifier);
+        }
+        User current = userOpt.orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or phone number"));
 
         if (!current.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
         }
+
         return current;
     }
+
 }
