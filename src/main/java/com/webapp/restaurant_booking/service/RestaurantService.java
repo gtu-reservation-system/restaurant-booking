@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
@@ -99,30 +100,79 @@ public class RestaurantService {
         return restaurantRepo.save(newRestaurant);
     }
 
-    public Restaurant uploadRestaurantPhoto(Long restaurantId, MultipartFile file) throws IOException {
+    public Restaurant addRestaurantWithPhotos(Map<String, Object> body, List<MultipartFile> photos) throws IOException {
+        Restaurant newRestaurant = addRestaurant(body);
+
+        if (photos != null && !photos.isEmpty()) {
+            List<String> photoPaths = photoService.uploadMultiplePhotos(photos);
+            newRestaurant.setPhotoPaths(photoPaths);
+            restaurantRepo.save(newRestaurant);
+        }
+
+        return newRestaurant;
+    }
+
+    public Restaurant addRestaurantPhotos(Long restaurantId, List<MultipartFile> newPhotos) throws IOException {
         Restaurant restaurant = restaurantRepo.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
-        String filePath = photoService.uploadPhoto(file);
+        List<String> newPhotoPaths = photoService.uploadMultiplePhotos(newPhotos);
+
         if (restaurant.getPhotoPaths() == null) {
             restaurant.setPhotoPaths(new ArrayList<>());
         }
-        restaurant.getPhotoPaths().add(filePath);
-        restaurantRepo.save(restaurant);
-        return restaurant;
+        restaurant.getPhotoPaths().addAll(newPhotoPaths);
+
+        return restaurantRepo.save(restaurant);
     }
 
-    public byte[] getRestaurantPhoto(Long restaurantId, int index) throws IOException {
+    public Restaurant removeRestaurantPhotos(Long restaurantId, List<Integer> photoIndexes) throws IOException {
         Restaurant restaurant = restaurantRepo.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
         List<String> photoPaths = restaurant.getPhotoPaths();
-        if (index < 0 || index >= photoPaths.size()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Photo not found");
+
+        List<String> photosToRemove = photoIndexes.stream()
+                .map(photoPaths::get)
+                .collect(Collectors.toList());
+
+        photoService.deletePhotos(photosToRemove);
+
+        photoPaths.removeAll(photosToRemove);
+        restaurant.setPhotoPaths(photoPaths);
+
+        return restaurantRepo.save(restaurant);
+    }
+
+    public Restaurant replaceRestaurantPhotos(Long restaurantId, List<MultipartFile> newPhotos) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        if (restaurant.getPhotoPaths() != null && !restaurant.getPhotoPaths().isEmpty()) {
+            photoService.deletePhotos(restaurant.getPhotoPaths());
         }
 
-        String filePath = photoPaths.get(index);
-        return photoService.getPhoto(filePath);
+        List<String> newPhotoPaths = photoService.uploadMultiplePhotos(newPhotos);
+        restaurant.setPhotoPaths(newPhotoPaths);
+
+        return restaurantRepo.save(restaurant);
+    }
+
+    public List<byte[]> getAllRestaurantPhotos(Long restaurantId) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        List<String> photoPaths = restaurant.getPhotoPaths();
+
+        return photoPaths.stream()
+                .map(path -> {
+                    try {
+                        return photoService.getPhoto(path);
+                    } catch (IOException e) {
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error reading photo");
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public List<Restaurant> searchRestaurantsByTag(String tag) {

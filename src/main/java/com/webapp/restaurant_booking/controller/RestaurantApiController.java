@@ -1,15 +1,23 @@
 package com.webapp.restaurant_booking.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webapp.restaurant_booking.models.Restaurant;
+import com.webapp.restaurant_booking.repo.RestaurantRepo;
+import com.webapp.restaurant_booking.service.PhotoService;
 import com.webapp.restaurant_booking.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RequestMapping("/api/restaurants")
@@ -18,6 +26,12 @@ public class RestaurantApiController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private RestaurantRepo restaurantRepo;
+
+    @Autowired
+    private PhotoService photoService;
 
     @GetMapping()
     public List<Restaurant> getAllRestaurants() {
@@ -44,16 +58,57 @@ public class RestaurantApiController {
         return restaurantService.addRestaurant(body);
     }
 
-    @PostMapping("/{id}/photo")
-    public ResponseEntity<Restaurant> uploadRestaurantPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-        Restaurant updatedRestaurant = restaurantService.uploadRestaurantPhoto(id, file);
+    @PostMapping(value = "/with-photos")
+    public ResponseEntity<Restaurant> addRestaurantWithPhotos(
+            @RequestPart("restaurant") String restaurantJson,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos
+    ) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> body = mapper.readValue(restaurantJson, Map.class);
+
+        Restaurant restaurant = restaurantService.addRestaurantWithPhotos(body, photos);
+        return ResponseEntity.ok(restaurant);
+    }
+
+    @PostMapping(value = "/{id}/photos", consumes = "multipart/form-data")
+    public ResponseEntity<Restaurant> addRestaurantPhotos(
+            @PathVariable Long id,
+            @RequestPart("photos") List<MultipartFile> photos
+    ) throws IOException {
+        Restaurant updatedRestaurant = restaurantService.addRestaurantPhotos(id, photos);
         return ResponseEntity.ok(updatedRestaurant);
     }
 
-    @GetMapping(value = "/{id}/photo/{index}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getRestaurantPhoto(@PathVariable Long id, @PathVariable int index) throws IOException {
-        byte[] photo = restaurantService.getRestaurantPhoto(id, index);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(photo);
+    @DeleteMapping("/{id}/photos")
+    public ResponseEntity<Restaurant> removeRestaurantPhotos(
+            @PathVariable Long id,
+            @RequestBody List<Integer> photoIndexes
+    ) throws IOException {
+        Restaurant updatedRestaurant = restaurantService.removeRestaurantPhotos(id, photoIndexes);
+        return ResponseEntity.ok(updatedRestaurant);
+    }
+
+    @PutMapping(value = "/{id}/photos", consumes = "multipart/form-data")
+    public ResponseEntity<Restaurant> replaceRestaurantPhotos(
+            @PathVariable Long id,
+            @RequestPart("photos") List<MultipartFile> photos
+    ) throws IOException {
+        Restaurant updatedRestaurant = restaurantService.replaceRestaurantPhotos(id, photos);
+        return ResponseEntity.ok(updatedRestaurant);
+    }
+
+    @GetMapping("/{id}/photos")
+    public ResponseEntity<List<String>> getAllRestaurantPhotos(@PathVariable Long id) {
+        Restaurant restaurant = restaurantRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        List<String> photoPaths = restaurant.getPhotoPaths();
+
+        if (photoPaths == null || photoPaths.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(photoPaths);
     }
 
     @GetMapping("/tag")
