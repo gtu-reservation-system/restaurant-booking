@@ -16,6 +16,9 @@ public class RestaurantTable {
     @Column
     private boolean available;
 
+    @Column
+    private int capacity;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference
@@ -24,16 +27,18 @@ public class RestaurantTable {
     public RestaurantTable() {
     }
 
-    public RestaurantTable(String name, boolean available, Restaurant restaurant) {
+    public RestaurantTable(String name, boolean available, int capacity, Restaurant restaurant) {
         this.name = name;
         this.available = available;
+        this.capacity = capacity;
         this.restaurant = restaurant;
     }
 
-    public RestaurantTable(long id, String name, boolean available, Restaurant restaurant) {
+    public RestaurantTable(long id, String name, boolean available, int capacity, Restaurant restaurant) {
         this.id = id;
         this.name = name;
         this.available = available;
+        this.capacity = capacity;
         this.restaurant = restaurant;
     }
 
@@ -59,6 +64,14 @@ public class RestaurantTable {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 
     public Restaurant getRestaurant() {
