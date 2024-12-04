@@ -56,9 +56,15 @@ public class UserService {
 		String number = body.get("phoneNumber");
 
 		Optional<User> existingUser  = userRepo.findByEmail(email);
-		if (existingUser .isPresent()) {
+		if (existingUser.isPresent()) {
 			throw new IllegalArgumentException("Email is already in use.");
 		}
+
+        Optional<User> existingUser2  = userRepo.findByPhoneNumber(number);
+        if (existingUser2.isPresent()) {
+            throw new IllegalArgumentException("Phone number is already in use.");
+        }
+
         if (password.length() < 3 || password.length() > 12) {
             throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
         }
