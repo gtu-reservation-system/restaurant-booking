@@ -20,8 +20,28 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody Map<String, Object> body) {
-        Reservation savedReservation = reservationService.addReservation(body);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+        try {
+            //debug lines are needed, reservation time and table size can be hard to follow
+            System.out.println("Reservation Request Body: " + body);
+
+            if (!body.containsKey("restaurantId")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Restaurant ID is required");
+            }
+            if (!body.containsKey("userId")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required");
+            }
+            if (!body.containsKey("reservationTime")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation time is required");
+            }
+            if (!body.containsKey("numberOfPeople")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of people is required");
+            }
+            Reservation savedReservation = reservationService.addReservation(body);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing reservation: " + e.getMessage());
+        }
     }
 
     @GetMapping
