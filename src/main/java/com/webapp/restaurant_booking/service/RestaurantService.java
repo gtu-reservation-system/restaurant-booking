@@ -56,6 +56,7 @@ public class RestaurantService {
                 RestaurantTable table = new RestaurantTable();
                 table.setName((String) tableData.get("name"));
                 table.setAvailable((Boolean) tableData.get("available"));
+                table.setCapacity(((Number) tableData.get("capacity")).intValue());
                 table.setRestaurant(current);
                 restaurantTables.add(table);
             }
@@ -87,10 +88,12 @@ public class RestaurantService {
         for (Map<String, Object> tableData : tablesData) {
             String tableName = (String) tableData.get("name");
             boolean available = (Boolean) tableData.get("available");
+            int capacity = ((Number) tableData.get("capacity")).intValue();
 
             RestaurantTable restaurantTable = new RestaurantTable();
             restaurantTable.setName(tableName);
             restaurantTable.setAvailable(available);
+            restaurantTable.setCapacity(capacity);
             restaurantTable.setRestaurant(newRestaurant);
 
             restaurantTables.add(restaurantTable);

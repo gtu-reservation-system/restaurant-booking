@@ -71,29 +71,29 @@ INSERT INTO restaurant_photos (restaurant_id, photo_path) VALUES
     (10, 'dimsum1.jpg');
 
 -- Insert Tables for Restaurants
-INSERT INTO restaurant_table (id, name, available, restaurant_id) VALUES
-    (1, 'Table 1', true, 1),
-    (2, 'Table 2', true, 1),
-    (3, 'Table 3', false, 1),
-    (4, 'Table 1', true, 2),
-    (5, 'Table 2', true, 2),
-    (6, 'Table 3', false, 2),
-    (7, 'Table 1', true, 3),
-    (8, 'Table 2', true, 3),
-    (9, 'Table 1', true, 4),
-    (10, 'Table 2', false, 4),
-    (11, 'Table 1', true, 5),
-    (12, 'Table 2', true, 5),
-    (13, 'Table 1', true, 6),
-    (14, 'Table 2', false, 6),
-    (15, 'Table 1', true, 7),
-    (16, 'Table 2', true, 7),
-    (17, 'Table 1', true, 8),
-    (18, 'Table 2', false, 8),
-    (19, 'Table 1', true, 9),
-    (20, 'Table 2', true, 9),
-    (21, 'Table 1', true, 10),
-    (22, 'Table 2', false, 10);
+INSERT INTO restaurant_table (id, name, available, restaurant_id, capacity) VALUES
+    (1, 'Table 1', true, 1, 6),
+    (2, 'Table 2', true, 1, 6),
+    (3, 'Table 3', false, 1, 6),
+    (4, 'Table 1', true, 2, 6),
+    (5, 'Table 2', true, 2, 6),
+    (6, 'Table 3', false, 2, 4),
+    (7, 'Table 1', true, 3, 4),
+    (8, 'Table 2', true, 3, 4),
+    (9, 'Table 1', true, 4, 4),
+    (10, 'Table 2', false, 4, 4),
+    (11, 'Table 1', true, 5, 4),
+    (12, 'Table 2', true, 5, 4),
+    (13, 'Table 1', true, 6, 4),
+    (14, 'Table 2', false, 6, 2),
+    (15, 'Table 1', true, 7, 2),
+    (16, 'Table 2', true, 7, 2),
+    (17, 'Table 1', true, 8, 2),
+    (18, 'Table 2', false, 8, 2),
+    (19, 'Table 1', true, 9, 2),
+    (20, 'Table 2', true, 9, 2),
+    (21, 'Table 1', true, 10, 2),
+    (22, 'Table 2', false, 10, 2);
 
 -- Insert Reservations
 INSERT INTO reservation (id, restaurant_id, user_id, table_id, reservation_time, number_of_people) VALUES
