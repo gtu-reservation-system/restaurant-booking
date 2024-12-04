@@ -16,7 +16,7 @@ public class RestaurantTable {
     @Column
     private boolean available;
 
-    @Column
+    @Column(nullable = false)
     private int capacity;
 
     @ManyToOne

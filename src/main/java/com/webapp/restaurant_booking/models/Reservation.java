@@ -27,9 +27,17 @@ public class Reservation {
 
     private LocalDateTime reservationTime;
 
+    @Column(nullable = false)
 	private Integer numberOfPeople;
 
     public Reservation() {
+    }
+
+    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationTime, Integer numberOfPeople) {
+        this.restaurant = restaurant;
+        this.user = user;
+        this.reservationTime = reservationTime;
+        this.numberOfPeople = numberOfPeople;
     }
 
     public Reservation(Long id, Restaurant restaurant, User user, LocalDateTime reservationTime) {
@@ -83,5 +91,13 @@ public class Reservation {
 
     public void setTable(RestaurantTable table) {
         this.table = table;
+    }
+
+    public Integer getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public void setNumberOfPeople(Integer numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
     }
 }

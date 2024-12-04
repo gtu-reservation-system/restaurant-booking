@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class ReservationService {
         Long restaurantId = ((Number) body.get("restaurantId")).longValue();
         Long userId = ((Number) body.get("userId")).longValue();
         LocalDateTime reservationTime = LocalDateTime.parse((String) body.get("reservationTime"));
+        Integer numberOfPeople = ((Number) body.get("numberOfPeople")).intValue();
 
         validateReservationTime(reservationTime);
 
@@ -48,14 +50,46 @@ public class ReservationService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        RestaurantTable availableTable = findAvailableTable(restaurant, reservationTime);
+        RestaurantTable availableTable = findAvailableTableForPartySize(restaurant, reservationTime, numberOfPeople);
 
         availableTable.setAvailable(false);
         tableRepo.save(availableTable);
 
-        Reservation newReservation = new Reservation(restaurant, user, reservationTime);
+        Reservation newReservation = new Reservation(restaurant, user, reservationTime, numberOfPeople);
         newReservation.setTable(availableTable);
         return reservationRepo.save(newReservation);
+    }
+
+    private RestaurantTable findAvailableTableForPartySize(Restaurant restaurant, LocalDateTime reservationTime, Integer numberOfPeople) {
+        List<RestaurantTable> availableTables = restaurant.getTables().stream()
+                .filter(table -> table.getCapacity() >= numberOfPeople)
+                .filter(table -> isTableAvailableAtTime(table, reservationTime))
+                .collect(Collectors.toList());
+
+        if (availableTables.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "No tables available for " + numberOfPeople + " people at this time.");
+        }
+
+        return availableTables.stream()
+                .min(Comparator.comparingInt(RestaurantTable::getCapacity))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "No suitable tables found."));
+    }
+
+    private boolean isTableAvailableAtTime(RestaurantTable table, LocalDateTime reservationTime) {
+        LocalDateTime hourStart = reservationTime;
+        LocalDateTime hourEnd = reservationTime.plusHours(1);
+
+        List<Reservation> conflictingReservations = reservationRepo
+                .findReservationsByRestaurantAndTimeBetween(
+                        table.getRestaurant().getId(),
+                        hourStart,
+                        hourEnd
+                );
+
+        return conflictingReservations.stream()
+                .noneMatch(r -> r.getTable().getId() == table.getId());
     }
 
     private void validateReservationTime(LocalDateTime reservationTime) {
@@ -79,13 +113,6 @@ public class ReservationService {
         }
 
         return availableTables.get(0);
-    }
-
-    private boolean isTableAvailableAtTime(RestaurantTable table, LocalDateTime reservationTime) {
-        List<Reservation> existingReservations = reservationRepo.findReservationsByRestaurantAndTime(table.getRestaurant().getId(), reservationTime);
-
-        return existingReservations.stream()
-                .noneMatch(r -> r.getTable().getId() == table.getId());
     }
 
     public List<Reservation> getAllReservations() {
