@@ -41,6 +41,7 @@ public class UserService {
             if (password.length() < 3 || password.length() > 12) {
                 throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
             }
+            current.setPhoneNumber((body.get("phoneNumber")));
             current.setName(body.get("name"));
             current.setEmail(body.get("email"));
             current.setPassword(password);
