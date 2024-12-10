@@ -48,11 +48,19 @@ public class RestaurantApiController {
         return restaurantService.removeRestaurant(id);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Restaurant> loginRestaurant(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        Restaurant restaurant = restaurantService.loginRestaurant(email, password);
+        return ResponseEntity.ok(restaurant);
+    }
+
     @PutMapping(value = "/{id}")
     public Restaurant updateRestaurant(@PathVariable("id") long id, @RequestBody Map<String, Object> body) {
         return restaurantService.updateRestaurant(id, body);
     }
-
+/*
     @PostMapping()
     public Restaurant addRestaurant(@RequestBody Map<String, Object> body) {
         return restaurantService.addRestaurant(body);
@@ -68,6 +76,42 @@ public class RestaurantApiController {
 
         Restaurant restaurant = restaurantService.addRestaurantWithPhotos(body, photos);
         return ResponseEntity.ok(restaurant);
+    }
+*/
+    @PostMapping(value = "", consumes = "multipart/form-data")
+    public ResponseEntity<Restaurant> addRestaurantWithLogoAndPhotos(
+            @RequestPart("restaurant") String restaurantJson,
+            @RequestPart(value = "logoPhoto", required = false) MultipartFile logoPhoto,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos
+    ) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> body = mapper.readValue(restaurantJson, Map.class);
+
+        Restaurant restaurant = restaurantService.addRestaurantWithLogoAndPhotos(body, logoPhoto, photos);
+        return ResponseEntity.ok(restaurant);
+    }
+
+    @PutMapping(value = "/{id}/logo", consumes = "multipart/form-data")
+    public ResponseEntity<Restaurant> updateRestaurantLogo(
+            @PathVariable Long id,
+            @RequestPart("logoPhoto") MultipartFile logoPhoto
+    ) throws IOException {
+        Restaurant updatedRestaurant = restaurantService.updateRestaurantLogo(id, logoPhoto);
+        return ResponseEntity.ok(updatedRestaurant);
+    }
+
+    @GetMapping("/{id}/logo")
+    public ResponseEntity<ByteArrayResource> getRestaurantLogo(@PathVariable Long id) throws IOException {
+        byte[] logoBytes = restaurantService.getRestaurantLogo(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new ByteArrayResource(logoBytes));
+    }
+
+    @DeleteMapping("/{id}/logo")
+    public ResponseEntity<Restaurant> deleteLogo(@PathVariable Long id) throws IOException {
+        Restaurant updatedRestaurant = restaurantService.deleteLogo(id);
+        return ResponseEntity.ok(updatedRestaurant);
     }
 
     @PostMapping(value = "/{id}/photos", consumes = "multipart/form-data")
