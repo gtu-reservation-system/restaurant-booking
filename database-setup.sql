@@ -12,12 +12,12 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insert Users with more diverse roles and information
 INSERT INTO user (id, name, email, password, phone_number, role) VALUES
-    (1, 'John Doe', 'john.doe@example.com', 'password123', 5554443331, 'ADMIN'),
-    (2, 'Jane Smith', 'jane.smith@example.com', 'password123', 5556662221, 'USER'),
-    (3, 'Alice Johnson', 'alice.johnson@example.com', 'password123', 5552221111, 'RESTAURANT_OWNER'),
-    (4, 'Bob Wilson', 'bob.wilson@example.com', 'password123', 5553334441, 'USER'),
-    (5, 'Emma Brown', 'emma.brown@example.com', 'password123', 5557778881, 'RESTAURANT_OWNER'),
-    (6, 'Michael Lee', 'michael.lee@example.com', 'password123', 5559990001, 'USER');
+    (1, 'John Doe', 'john.doe@example.com', 'password123', 5554443331, 'admin'),
+    (2, 'Jane Smith', 'jane.smith@example.com', 'password123', 5556662221, 'user'),
+    (3, 'Alice Johnson', 'alice.johnson@example.com', 'password123', 5552221111, 'restaurant_owner'),
+    (4, 'Bob Wilson', 'bob.wilson@example.com', 'password123', 5553334441, 'user'),
+    (5, 'Emma Brown', 'emma.brown@example.com', 'password123', 5557778881, 'restaurant_owner'),
+    (6, 'Michael Lee', 'michael.lee@example.com', 'password123', 5559990001, 'user');
 
 -- Insert Restaurants with more detailed information
 INSERT INTO restaurant (id, name, address) VALUES
