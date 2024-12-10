@@ -71,6 +71,9 @@ public class PasswordResetService {
 
         String newPassword = request.getNewPassword();
 
+        if (newPassword.length() < 3 || newPassword.length() > 12) {
+            throw new IllegalArgumentException("Password must be between 3 and 12 characters.");
+        }
 
         User user = resetToken.getUser();
         user.setPassword(newPassword);
