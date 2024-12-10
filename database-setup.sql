@@ -10,7 +10,7 @@ TRUNCATE TABLE restaurant;
 TRUNCATE TABLE user;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Insert Users with more diverse roles and information
+-- Insert Users
 INSERT INTO user (id, name, email, password, phone_number, role) VALUES
     (1, 'John Doe', 'john.doe@example.com', 'password123', 5554443331, 'admin'),
     (2, 'Jane Smith', 'jane.smith@example.com', 'password123', 5556662221, 'user'),
@@ -19,18 +19,20 @@ INSERT INTO user (id, name, email, password, phone_number, role) VALUES
     (5, 'Emma Brown', 'emma.brown@example.com', 'password123', 5557778881, 'owner'),
     (6, 'Michael Lee', 'michael.lee@example.com', 'password123', 5559990001, 'user');
 
--- Insert Restaurants with more detailed information
-INSERT INTO restaurant (id, name, address) VALUES
-    (1, 'The Great Steakhouse', '123 Main Street, Foodville'),
-    (2, 'Ocean Breeze Seafood', '456 Beach Avenue, Coastline'),
-    (3, 'Mountain Retreat Cafe', '789 Hilltop Road, Mountainview'),
-    (4, 'Spice Kingdom Indian Cuisine', '321 Curry Lane, Flavortown'),
-    (5, 'Green Leaf Vegetarian Bistro', '654 Veggie Street, Healthyville'),
-    (6, 'Pasta Paradise', '987 Italian Way, Marinara'),
-    (7, 'Sushi Sensation', '246 Salmon Road, Japantown'),
-    (8, 'Burger Bliss', '135 Grill Avenue, Meatsville'),
-    (9, 'Mediterranean Delights', '802 Olive Circle, Hummusland'),
-    (10, 'Dim Sum Palace', '579 Dumpling Street, Chinatown');
+-- Update Restaurants
+INSERT INTO restaurant 
+(id, name, address, phone_number, email, password, operating_hours, birthday_party, anniversary, job_meeting, proposal, terms_of_service, logo_photo_path, website_link) 
+VALUES
+(1, 'The Great Steakhouse', '123 Main Street, Foodville', '123-456-7890', 'steakhouse@example.com', 'password123', '10:00 AM - 10:00 PM', true, true, true, false, 'Terms for The Great Steakhouse', 'steakhouse_logo.png', 'http://www.greatsteakhouse.com'),
+(2, 'Ocean Breeze Seafood', '456 Beach Avenue, Coastline', '234-567-8901', 'oceanbreeze@example.com', 'password123', '11:00 AM - 11:00 PM', false, true, true, true, 'Terms for Ocean Breeze Seafood', 'oceanbreeze_logo.png', 'http://www.oceanbreezeseafood.com'),
+(3, 'Mountain Retreat Cafe', '789 Hilltop Road, Mountainview', '345-678-9012', 'mountainretreat@example.com', 'password123', '8:00 AM - 8:00 PM', true, false, true, false, 'Terms for Mountain Retreat Cafe', 'mountainretreat_logo.png', 'http://www.mountainretreatcafe.com'),
+(4, 'Spice Kingdom Indian Cuisine', '321 Curry Lane, Flavortown', '456-789-0123', 'spicekingdom@example.com', 'password123', '12:00 PM - 12:00 AM', true, true, false, true, 'Terms for Spice Kingdom Indian Cuisine', 'spicekingdom_logo.png', 'http://www.spicekingdom.com'),
+(5, 'Green Leaf Vegetarian Bistro', '654 Veggie Street, Healthyville', '567-890-1234', 'greenleaf@example.com', 'password123', '9:00 AM - 9:00 PM', false, false, true, false, 'Terms for Green Leaf Vegetarian Bistro', 'greenleaf_logo.png', 'http://www.greenleafbistro.com'),
+(6, 'Pasta Paradise', '987 Italian Way, Marinara', '678-901-2345', 'pastaparadise@example.com', 'password123', '11:00 AM - 11:00 PM', true, true, false, true, 'Terms for Pasta Paradise', 'pastaparadise_logo.png', 'http://www.pastaparadise.com'),
+(7, 'Sushi Sensation', '246 Salmon Road, Japantown', '789-012-3456', 'sushisensation@example.com', 'password123', '11:30 AM - 10:30 PM', false, true, true, false, 'Terms for Sushi Sensation', 'sushisensation_logo.png', 'http://www.sushisensation.com'),
+(8, 'Burger Bliss', '135 Grill Avenue, Meatsville', '890-123-4567', 'burgerbliss@example.com', 'password123', '10:00 AM - 10:00 PM', true, true, false, true, 'Terms for Burger Bliss', 'burgerbliss_logo.png', 'http://www.burgerbliss.com'),
+(9, 'Mediterranean Delights', '802 Olive Circle, Hummusland', '901-234-5678', 'mediterraneandelights@example.com', 'password123', '12:00 PM - 10:00 PM', false, false, true, true, 'Terms for Mediterranean Delights', 'mediterraneandelights_logo.png', 'http://www.mediterraneandelights.com'),
+(10, 'Dim Sum Palace', '579 Dumpling Street, Chinatown', '012-345-6789', 'dimsumpalace@example.com', 'password123', '10:30 AM - 9:30 PM', true, true, true, false, 'Terms for Dim Sum Palace', 'dimsumpalace_logo.png', 'http://www.dimsumpalace.com');
 
 -- Insert Restaurant Tags
 INSERT INTO restaurant_tags (restaurant_id, tag) VALUES
