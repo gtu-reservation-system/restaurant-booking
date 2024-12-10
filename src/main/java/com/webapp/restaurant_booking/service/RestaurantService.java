@@ -80,7 +80,7 @@ public class RestaurantService {
             current.setJobMeeting((Boolean) body.get("jobMeeting"));
             current.setProposal((Boolean) body.get("proposal"));
 
-            current.setTermsOfService((String) body.get("termsOfService"));
+            current.setAdditionalCondition((String) body.get("additionalCondition"));
             current.setWebsiteLink((String) body.get("websiteLink"));
 
             List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
@@ -119,7 +119,7 @@ public class RestaurantService {
         Boolean jobMeeting = (Boolean) body.get("jobMeeting");
         Boolean proposal = (Boolean) body.get("proposal");
 
-        String termsOfService = (String) body.get("termsOfService");
+        String additionalCondition = (String) body.get("additionalCondition");
         String websiteLink = (String) body.get("websiteLink");
 
         List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
@@ -139,7 +139,7 @@ public class RestaurantService {
         newRestaurant.setJobMeeting(jobMeeting);
         newRestaurant.setProposal(proposal);
 
-        newRestaurant.setTermsOfService(termsOfService);
+        newRestaurant.setAdditionalCondition(additionalCondition);
         newRestaurant.setWebsiteLink(websiteLink);
 
         newRestaurant.setTags(new HashSet<>(tags));

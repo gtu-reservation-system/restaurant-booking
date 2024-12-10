@@ -48,7 +48,7 @@ public class Restaurant {
     private Boolean proposal;
 
     @Column
-    private String termsOfService;
+    private String additionalCondition;
 
     @Column
     private String logoPhotoPath;
@@ -206,12 +206,12 @@ public class Restaurant {
         this.proposal = proposal;
     }
 
-    public String getTermsOfService() {
-        return termsOfService;
+    public String getAdditionalCondition() {
+        return additionalCondition;
     }
 
-    public void setTermsOfService(String termsOfService) {
-        this.termsOfService = termsOfService;
+    public void setAdditionalCondition(String additionalCondition) {
+        this.additionalCondition = additionalCondition;
     }
 
     public String getLogoPhotoPath() {
