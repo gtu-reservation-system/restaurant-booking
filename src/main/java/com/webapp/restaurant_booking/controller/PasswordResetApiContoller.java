@@ -26,16 +26,7 @@ public class PasswordResetApiContoller {
 
     @Autowired
     private PasswordResetService passwordResetService;
-/*
-    @GetMapping()
-    public ResponseEntity<List<PasswordResetToken>> getTokens() {
-        List<PasswordResetToken> tokens= new ArrayList<>();
-        for(User user: userRepo.findAll()){
-            tokens.addAll(passwordResetTokenRepo.findByUser(user));
-        }
-        return ResponseEntity.ok(tokens);
-    }
-*/
+
     @PostMapping("/forgot")
     public ResponseEntity<String> forgotPassword(@RequestBody PasswordResetRequestDTO request){
         boolean is_initiated= passwordResetService.initiatePasswordReset(request);
