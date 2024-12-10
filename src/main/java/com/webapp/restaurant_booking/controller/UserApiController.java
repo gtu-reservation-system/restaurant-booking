@@ -50,11 +50,4 @@ public class UserApiController {
         User user = userService.login(identifier, password);
         return ResponseEntity.ok(user);
     }
-
-	/*
-	@GetMapping("/search")
-    public List<User> searchUsers(@RequestParam("name") String name) {
-        return userRepo.findByNameContaining(name);
-    }
-	*/
 }

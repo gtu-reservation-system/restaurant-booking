@@ -23,6 +23,39 @@ public class Restaurant {
     @Column
     private String address;
 
+    @Column
+    private String phoneNumber;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column
+    private String password;
+
+    @Column
+    private String operatingHours;
+
+    @Column
+    private Boolean birthdayParty;
+
+    @Column
+    private Boolean anniversary;
+
+    @Column
+    private Boolean jobMeeting;
+
+    @Column
+    private Boolean proposal;
+
+    @Column
+    private String termsOfService;
+
+    @Column
+    private String logoPhotoPath;
+
+    @Column
+    private String websiteLink;
+
     @ElementCollection
     @CollectionTable(name = "restaurant_photos", joinColumns = @JoinColumn(name = "restaurant_id"))
     @Column(name = "photo_path")
@@ -107,6 +140,94 @@ public class Restaurant {
 
     public void setTables(Set<RestaurantTable> restaurantTables) {
         this.restaurantTables = restaurantTables;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getOperatingHours() {
+        return operatingHours;
+    }
+
+    public void setOperatingHours(String operatingHours) {
+        this.operatingHours = operatingHours;
+    }
+
+    public Boolean getBirthdayParty() {
+        return birthdayParty;
+    }
+
+    public void setBirthdayParty(Boolean birthdayParty) {
+        this.birthdayParty = birthdayParty;
+    }
+
+    public Boolean getAnniversary() {
+        return anniversary;
+    }
+
+    public void setAnniversary(Boolean anniversary) {
+        this.anniversary = anniversary;
+    }
+
+    public Boolean getJobMeeting() {
+        return jobMeeting;
+    }
+
+    public void setJobMeeting(Boolean jobMeeting) {
+        this.jobMeeting = jobMeeting;
+    }
+
+    public Boolean getProposal() {
+        return proposal;
+    }
+
+    public void setProposal(Boolean proposal) {
+        this.proposal = proposal;
+    }
+
+    public String getTermsOfService() {
+        return termsOfService;
+    }
+
+    public void setTermsOfService(String termsOfService) {
+        this.termsOfService = termsOfService;
+    }
+
+    public String getLogoPhotoPath() {
+        return logoPhotoPath;
+    }
+
+    public void setLogoPhotoPath(String logoPhotoPath) {
+        this.logoPhotoPath = logoPhotoPath;
+    }
+
+    public String getWebsiteLink() {
+        return websiteLink;
+    }
+
+    public void setWebsiteLink(String websiteLink) {
+        this.websiteLink = websiteLink;
     }
 
     public List<MenuItem> getMenuItems() {

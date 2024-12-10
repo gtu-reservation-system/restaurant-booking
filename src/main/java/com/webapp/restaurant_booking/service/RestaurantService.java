@@ -44,11 +44,44 @@ public class RestaurantService {
         return false;
     }
 
+    public Restaurant loginRestaurant(String email, String password) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+
+        Optional<Restaurant> restaurantOpt = restaurantRepo.findByEmail(email);
+        Restaurant restaurant = restaurantOpt.orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email"));
+
+        if (!restaurant.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
+        }
+
+        return restaurant;
+    }
+
     public Restaurant updateRestaurant(long id, Map<String, Object> body) {
         Restaurant current = restaurantRepo.findById(id).orElse(null);
         if (current != null) {
             current.setName((String) body.get("name"));
             current.setAddress((String) body.get("address"));
+
+            current.setPhoneNumber((String) body.get("phoneNumber"));
+            current.setEmail((String) body.get("email"));
+            current.setPassword((String) body.get("password"));
+            current.setOperatingHours((String) body.get("operatingHours"));
+
+            current.setBirthdayParty((Boolean) body.get("birthdayParty"));
+            current.setAnniversary((Boolean) body.get("anniversary"));
+            current.setJobMeeting((Boolean) body.get("jobMeeting"));
+            current.setProposal((Boolean) body.get("proposal"));
+
+            current.setTermsOfService((String) body.get("termsOfService"));
+            current.setWebsiteLink((String) body.get("websiteLink"));
 
             List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
             Set<RestaurantTable> restaurantTables = new HashSet<>();
@@ -76,12 +109,39 @@ public class RestaurantService {
         String name = (String) body.get("name");
         String address = (String) body.get("address");
 
+        String phoneNumber = (String) body.get("phoneNumber");
+        String email = (String) body.get("email");
+        String password = (String) body.get("password");
+        String operatingHours = (String) body.get("operatingHours");
+
+        Boolean birthdayParty = (Boolean) body.get("birthdayParty");
+        Boolean anniversary = (Boolean) body.get("anniversary");
+        Boolean jobMeeting = (Boolean) body.get("jobMeeting");
+        Boolean proposal = (Boolean) body.get("proposal");
+
+        String termsOfService = (String) body.get("termsOfService");
+        String websiteLink = (String) body.get("websiteLink");
+
         List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
         List<String> tags = body.get("tags") != null ? (List<String>) body.get("tags") : new ArrayList<>();
 
         Restaurant newRestaurant = new Restaurant();
         newRestaurant.setName(name);
         newRestaurant.setAddress(address);
+
+        newRestaurant.setPhoneNumber(phoneNumber);
+        newRestaurant.setEmail(email);
+        newRestaurant.setPassword(password);
+        newRestaurant.setOperatingHours(operatingHours);
+
+        newRestaurant.setBirthdayParty(birthdayParty);
+        newRestaurant.setAnniversary(anniversary);
+        newRestaurant.setJobMeeting(jobMeeting);
+        newRestaurant.setProposal(proposal);
+
+        newRestaurant.setTermsOfService(termsOfService);
+        newRestaurant.setWebsiteLink(websiteLink);
+
         newRestaurant.setTags(new HashSet<>(tags));
 
         Set<RestaurantTable> restaurantTables = new HashSet<>();
@@ -188,5 +248,59 @@ public class RestaurantService {
 
     public List<Restaurant> searchRestaurantsByMenuItem(String menuItemName) {
         return restaurantRepo.findByMenuItemNameContainingIgnoreCase(menuItemName);
+    }
+
+    public Restaurant addRestaurantWithLogoAndPhotos(Map<String, Object> body, MultipartFile logoPhoto, List<MultipartFile> photos) throws IOException {
+        Restaurant newRestaurant = addRestaurant(body);
+
+        if (logoPhoto != null && !logoPhoto.isEmpty()) {
+            String logoPath = photoService.uploadPhoto(logoPhoto);
+            newRestaurant.setLogoPhotoPath(logoPath);
+        }
+
+        if (photos != null && !photos.isEmpty()) {
+            List<String> photoPaths = photoService.uploadMultiplePhotos(photos);
+            newRestaurant.setPhotoPaths(photoPaths);
+        }
+
+        return restaurantRepo.save(newRestaurant);
+    }
+
+    public Restaurant updateRestaurantLogo(Long restaurantId, MultipartFile logoPhoto) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        if (restaurant.getLogoPhotoPath() != null) {
+            photoService.deletePhoto(restaurant.getLogoPhotoPath());
+        }
+
+        String logoPath = photoService.uploadPhoto(logoPhoto);
+        restaurant.setLogoPhotoPath(logoPath);
+
+        return restaurantRepo.save(restaurant);
+    }
+
+    public byte[] getRestaurantLogo(Long restaurantId) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        if (restaurant.getLogoPhotoPath() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Logo not found");
+        }
+
+        return photoService.getPhoto(restaurant.getLogoPhotoPath());
+    }
+
+    public Restaurant deleteLogo(Long restaurantId) throws IOException {
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+        if (restaurant.getLogoPhotoPath() != null) {
+            photoService.deletePhoto(restaurant.getLogoPhotoPath());
+            restaurant.setLogoPhotoPath(null);
+            return restaurantRepo.save(restaurant);
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No logo found to delete");
     }
 }
