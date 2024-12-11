@@ -1,5 +1,7 @@
 package com.webapp.restaurant_booking.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -40,6 +42,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private Set<Reservation> reservations;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<Comment> comments = new ArrayList<>();
 
     public User() {
     }
@@ -114,4 +120,12 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }

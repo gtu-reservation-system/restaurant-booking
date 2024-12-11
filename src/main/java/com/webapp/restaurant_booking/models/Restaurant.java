@@ -78,8 +78,11 @@ public class Restaurant {
     @Column(name = "tag")
     private Set<String> tags = new HashSet<>();
 
-    public Restaurant() {
-    }
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<Comment> comments = new ArrayList<>();
+
+    public Restaurant() {}
 
     public Restaurant(long id, String name, String address, Set<RestaurantTable> restaurantTables) {
         this.id = id;
@@ -140,6 +143,14 @@ public class Restaurant {
 
     public void setTables(Set<RestaurantTable> restaurantTables) {
         this.restaurantTables = restaurantTables;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public String getPhoneNumber() {
