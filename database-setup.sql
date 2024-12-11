@@ -7,21 +7,22 @@ TRUNCATE TABLE restaurant_photos;
 TRUNCATE TABLE restaurant_table;
 TRUNCATE TABLE menu_item;
 TRUNCATE TABLE restaurant;
+TRUNCATE TABLE comment;
 TRUNCATE TABLE user;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Insert Users
 INSERT INTO user (id, name, email, password, phone_number, role) VALUES
-    (1, 'John Doe', 'john.doe@example.com', 'password123', 5554443331, 'admin'),
-    (2, 'Jane Smith', 'jane.smith@example.com', 'password123', 5556662221, 'user'),
-    (3, 'Alice Johnson', 'alice.johnson@example.com', 'password123', 5552221111, 'owner'),
-    (4, 'Bob Wilson', 'bob.wilson@example.com', 'password123', 5553334441, 'user'),
-    (5, 'Emma Brown', 'emma.brown@example.com', 'password123', 5557778881, 'owner'),
-    (6, 'Michael Lee', 'michael.lee@example.com', 'password123', 5559990001, 'user');
+	(1, 'John Doe', 'john.doe@example.com', 'password123', 5554443331, 'admin'),
+	(2, 'Jane Smith', 'jane.smith@example.com', 'password123', 5556662221, 'user'),
+	(3, 'Alice Johnson', 'alice.johnson@example.com', 'password123', 5552221111, 'owner'),
+	(4, 'Bob Wilson', 'bob.wilson@example.com', 'password123', 5553334441, 'user'),
+	(5, 'Emma Brown', 'emma.brown@example.com', 'password123', 5557778881, 'owner'),
+	(6, 'Michael Lee', 'michael.lee@example.com', 'password123', 5559990001, 'user');
 
 -- Update Restaurants
 INSERT INTO restaurant 
-(id, name, address, phone_number, email, password, operating_hours, birthday_party, anniversary, job_meeting, proposal, terms_of_service, logo_photo_path, website_link) 
+(id, name, address, phone_number, email, password, operating_hours, birthday_party, anniversary, job_meeting, proposal, additional_condition, logo_photo_path, website_link) 
 VALUES
 (1, 'The Great Steakhouse', '123 Main Street, Foodville', '123-456-7890', 'steakhouse@example.com', 'password123', '10:00 AM - 10:00 PM', true, true, true, false, 'Terms for The Great Steakhouse', 'steakhouse_logo.png', 'http://www.greatsteakhouse.com'),
 (2, 'Ocean Breeze Seafood', '456 Beach Avenue, Coastline', '234-567-8901', 'oceanbreeze@example.com', 'password123', '11:00 AM - 11:00 PM', false, true, true, true, 'Terms for Ocean Breeze Seafood', 'oceanbreeze_logo.png', 'http://www.oceanbreezeseafood.com'),
@@ -33,6 +34,24 @@ VALUES
 (8, 'Burger Bliss', '135 Grill Avenue, Meatsville', '890-123-4567', 'burgerbliss@example.com', 'password123', '10:00 AM - 10:00 PM', true, true, false, true, 'Terms for Burger Bliss', 'burgerbliss_logo.png', 'http://www.burgerbliss.com'),
 (9, 'Mediterranean Delights', '802 Olive Circle, Hummusland', '901-234-5678', 'mediterraneandelights@example.com', 'password123', '12:00 PM - 10:00 PM', false, false, true, true, 'Terms for Mediterranean Delights', 'mediterraneandelights_logo.png', 'http://www.mediterraneandelights.com'),
 (10, 'Dim Sum Palace', '579 Dumpling Street, Chinatown', '012-345-6789', 'dimsumpalace@example.com', 'password123', '10:30 AM - 9:30 PM', true, true, true, false, 'Terms for Dim Sum Palace', 'dimsumpalace_logo.png', 'http://www.dimsumpalace.com');
+
+-- Insert Comments
+INSERT INTO comment (id, user_id, restaurant_id, rating, comment, created_at) VALUES
+	(1, 2, 1, 5, 'Amazing food and great service!', '2024-12-01 12:00:00'),
+	(2, 4, 2, 5, 'The steak was cooked to perfection.', '2024-12-02 14:30:00'),
+	(3, 6, 1, 4, 'A bit pricey but worth it.', '2024-12-03 18:45:00'),
+	(4, 1, 3, 3, 'Service could be improved.', '2024-12-04 19:00:00'),
+	(5, 3, 4, 4, 'Loved the ambiance!', '2024-12-05 20:30:00'),
+	(6, 2, 4, 5, 'Best dining experience ever!', '2024-12-06 21:15:00'),
+	(7, 5, 5, 4, 'Will visit again soon.', '2024-12-07 13:25:00'),
+	(8, 4, 6, 3, 'Small portions but tasty food.', '2024-12-08 14:10:00'),
+	(9, 6, 7, 4, 'Staff was very friendly.', '2024-12-09 17:45:00'),
+	(10, 1, 8, 2, 'Food was a bit salty.', '2024-12-10 12:50:00'),
+	(11, 3, 9, 5, 'Highly recommend this place!', '2024-12-11 16:40:00'),
+	(12, 5, 10, 4, 'Great experience for our anniversary.', '2024-12-12 18:30:00'),
+	(13, 2, 3, 4, 'Drinks were amazing.', '2024-12-13 19:20:00'),
+	(14, 4, 7, 2, 'Dessert selection is small', '2024-12-14 20:10:00'),
+	(15, 6, 4, 1, 'Worst restaurant in town!', '2024-12-15 21:00:00');
 
 -- Insert Restaurant Tags
 INSERT INTO restaurant_tags (restaurant_id, tag) VALUES
