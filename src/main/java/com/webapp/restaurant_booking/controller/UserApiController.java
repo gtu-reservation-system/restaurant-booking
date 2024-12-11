@@ -44,7 +44,7 @@ public class UserApiController {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody Map<String, String> body) {
-        String identifier = body.get("emailOrPhone");
+        String identifier = body.get("email");
         String password = body.get("password");
 
         User user = userService.login(identifier, password);
