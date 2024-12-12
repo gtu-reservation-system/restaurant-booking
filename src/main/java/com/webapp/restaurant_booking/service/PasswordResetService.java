@@ -26,7 +26,7 @@ public class PasswordResetService {
     private PasswordResetTokenRepo passwordResetTokenRepo;
 
     @Autowired
-    private EmailService emailService; // TODO write actual email service
+    private EmailService emailService;
 
     private String generateResetToken() {
         SecureRandom random = new SecureRandom();
