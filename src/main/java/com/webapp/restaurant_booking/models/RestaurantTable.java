@@ -19,7 +19,7 @@ public class RestaurantTable {
     @Column(nullable = false)
     private int capacity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     @JsonBackReference
     private Restaurant restaurant;

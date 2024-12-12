@@ -84,16 +84,25 @@ public class RestaurantService {
             current.setWebsiteLink((String) body.get("websiteLink"));
 
             List<Map<String, Object>> tablesData = (List<Map<String, Object>>) body.get("tables");
-            Set<RestaurantTable> restaurantTables = new HashSet<>();
-            for (Map<String, Object> tableData : tablesData) {
-                RestaurantTable table = new RestaurantTable();
-                table.setName((String) tableData.get("name"));
-                table.setAvailable((Boolean) tableData.get("available"));
-                table.setCapacity(((Number) tableData.get("capacity")).intValue());
-                table.setRestaurant(current);
-                restaurantTables.add(table);
+            Set<RestaurantTable> updatedTables = new HashSet<>();
+
+            Set<RestaurantTable> existingTables = current.getTables();
+            existingTables.removeIf(existingTable -> tablesData.stream().noneMatch(tableData -> existingTable.getName().equals(tableData.get("name"))));
+
+            for(Map<String, Object> tableData: tablesData){
+                String tableName = (String) tableData.get("name");
+
+                RestaurantTable tableToUpdate = existingTables.stream()
+                        .filter(t -> t.getName().equals(tableName))
+                        .findFirst()
+                        .orElse(new RestaurantTable());
+                tableToUpdate.setName(tableName);
+                tableToUpdate.setAvailable((Boolean) tableData.get("available"));
+                tableToUpdate.setCapacity(((Number) tableData.get("capacity")).intValue());
+                tableToUpdate.setRestaurant(current);
+                updatedTables.add(tableToUpdate);
             }
-            current.setTables(restaurantTables);
+            current.setTables(updatedTables);
 
             if (body.containsKey("tags")) {
                 List<String> tags = (List<String>) body.get("tags");
