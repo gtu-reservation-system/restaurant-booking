@@ -87,7 +87,12 @@ public class RestaurantService {
             Set<RestaurantTable> updatedTables = new HashSet<>();
 
             Set<RestaurantTable> existingTables = current.getTables();
-            existingTables.removeIf(existingTable -> tablesData.stream().noneMatch(tableData -> existingTable.getName().equals(tableData.get("name"))));
+            List<RestaurantTable> tablesToDelete = existingTables.stream().filter(existingTable -> tablesData.stream().noneMatch(tableData -> existingTable.getName().equals(tableData.get("name")))).collect(Collectors.toList());
+
+            for (RestaurantTable tableToDelete : tablesToDelete) {
+                existingTables.remove(tableToDelete);
+                tableRepo.delete(tableToDelete);
+            }
 
             for(Map<String, Object> tableData: tablesData){
                 String tableName = (String) tableData.get("name");
@@ -96,6 +101,7 @@ public class RestaurantService {
                         .filter(t -> t.getName().equals(tableName))
                         .findFirst()
                         .orElse(new RestaurantTable());
+
                 tableToUpdate.setName(tableName);
                 tableToUpdate.setAvailable((Boolean) tableData.get("available"));
                 tableToUpdate.setCapacity(((Number) tableData.get("capacity")).intValue());
@@ -206,7 +212,7 @@ public class RestaurantService {
 
         List<String> photosToRemove = photoIndexes.stream()
                 .map(photoPaths::get)
-                .collect(Collectors.toList());
+                    .collect(Collectors.toList());
 
         photoService.deletePhotos(photosToRemove);
 
