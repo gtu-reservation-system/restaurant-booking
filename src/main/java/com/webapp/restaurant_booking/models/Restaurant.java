@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.boot.model.source.spi.CascadeStyleSource;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,9 +62,9 @@ public class Restaurant {
     @Column(name = "photo_path")
     private List<String> photoPaths = new ArrayList<>();
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<RestaurantTable> restaurantTables;
+    private Set<RestaurantTable> restaurantTables= new HashSet<>();
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
