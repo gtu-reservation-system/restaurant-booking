@@ -30,7 +30,7 @@ public class ReservationApiController {
             if (!body.containsKey("userId")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required");
             }
-            if (!body.containsKey("reservationTime")) {
+            if (!body.containsKey("reservationStartTime")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation time is required");
             }
             if (!body.containsKey("numberOfPeople")) {

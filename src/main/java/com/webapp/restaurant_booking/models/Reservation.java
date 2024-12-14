@@ -25,7 +25,8 @@ public class Reservation {
     @JoinColumn(name = "table_id")
     private RestaurantTable table;
 
-    private LocalDateTime reservationTime;
+    private LocalDateTime reservationStartTime;
+    private LocalDateTime reservationEndTime;
 
     @Column(nullable = false)
 	private Integer numberOfPeople;
@@ -33,24 +34,12 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationTime, Integer numberOfPeople) {
+    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople) {
         this.restaurant = restaurant;
         this.user = user;
-        this.reservationTime = reservationTime;
+        this.reservationStartTime= reservationStartTime;
+        this.reservationEndTime= reservationEndTime;
         this.numberOfPeople = numberOfPeople;
-    }
-
-    public Reservation(Long id, Restaurant restaurant, User user, LocalDateTime reservationTime) {
-        this.id = id;
-        this.restaurant = restaurant;
-        this.user = user;
-        this.reservationTime = reservationTime;
-    }
-
-    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationTime) {
-        this.restaurant = restaurant;
-        this.user = user;
-        this.reservationTime = reservationTime;
     }
 
     public Long getId() {
@@ -77,20 +66,28 @@ public class Reservation {
         this.user = user;
     }
 
-    public LocalDateTime getReservationTime() {
-        return reservationTime;
-    }
-
-    public void setReservationTime(LocalDateTime reservationTime) {
-        this.reservationTime = reservationTime;
-    }
-
     public RestaurantTable getTable() {
         return table;
     }
 
     public void setTable(RestaurantTable table) {
         this.table = table;
+    }
+
+    public LocalDateTime getReservationStartTime() {
+        return reservationStartTime;
+    }
+
+    public void setReservationStartTime(LocalDateTime reservationStartTime) {
+        this.reservationStartTime = reservationStartTime;
+    }
+
+    public LocalDateTime getReservationEndTime() {
+        return reservationEndTime;
+    }
+
+    public void setReservationEndTime(LocalDateTime reservationEndTime) {
+        this.reservationEndTime = reservationEndTime;
     }
 
     public Integer getNumberOfPeople() {
