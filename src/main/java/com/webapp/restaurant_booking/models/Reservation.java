@@ -34,16 +34,20 @@ public class Reservation {
     @Column
     private String allergy;
 
+    @Column
+    private String tag;
+
     public Reservation() {
     }
 
-    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople, String allergy) {
+    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople, String allergy, String tag) {
         this.restaurant = restaurant;
         this.user = user;
         this.reservationStartTime= reservationStartTime;
         this.reservationEndTime= reservationEndTime;
         this.numberOfPeople = numberOfPeople;
         this.allergy= allergy;
+        this.tag= tag;
     }
 
     public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople) {
@@ -118,4 +122,11 @@ public class Reservation {
         this.allergy = allergy;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }
