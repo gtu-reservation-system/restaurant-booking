@@ -53,6 +53,7 @@ public class ReservationService {
         LocalDateTime reservationEndTime = reservationStartTime.plusHours(1);
         Integer numberOfPeople = ((Number) body.get("numberOfPeople")).intValue();
         String allergy= ((String) body.get("allergy"));
+        String tag= ((String) body.get("tag"));
 
         validateReservationTime(reservationStartTime);
 
@@ -67,7 +68,7 @@ public class ReservationService {
 
         RestaurantTable availableTable = findAvailableTableForPartySize(restaurant, reservationStartTime, reservationEndTime, numberOfPeople);
 
-        Reservation newReservation = new Reservation(restaurant, user, reservationStartTime, reservationEndTime, numberOfPeople, allergy);
+        Reservation newReservation = new Reservation(restaurant, user, reservationStartTime, reservationEndTime, numberOfPeople, allergy, tag);
         newReservation.setTable(availableTable);
         return reservationRepo.save(newReservation);
     }

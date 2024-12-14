@@ -21,7 +21,6 @@ public class ReservationApiController {
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody Map<String, Object> body) {
         try {
-            //debug lines are needed, reservation time and table size can be hard to follow
             System.out.println("Reservation Request Body: " + body);
 
             if (!body.containsKey("restaurantId")) {
