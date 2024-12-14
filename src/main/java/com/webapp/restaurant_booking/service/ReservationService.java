@@ -42,41 +42,42 @@ public class ReservationService {
         List<Reservation> userReservations = reservationRepo.findByUserId(user.getId());
 
         return userReservations.stream()
-                .anyMatch(reservation -> reservation.getReservationTime().toLocalDate().isEqual(reservationDate));
+                .anyMatch(reservation -> reservation.getReservationStartTime().toLocalDate().isEqual(reservationDate));
     }
 
     @Transactional
     public Reservation addReservation(Map<String, Object> body) {
         Long restaurantId = ((Number) body.get("restaurantId")).longValue();
         Long userId = ((Number) body.get("userId")).longValue();
-        LocalDateTime reservationTime = LocalDateTime.parse((String) body.get("reservationTime"));
+        LocalDateTime reservationStartTime = LocalDateTime.parse((String) body.get("reservationStartTime"));
+        LocalDateTime reservationEndTime = reservationStartTime.plusHours(1);
         Integer numberOfPeople = ((Number) body.get("numberOfPeople")).intValue();
 
-        validateReservationTime(reservationTime);
+        validateReservationTime(reservationStartTime);
 
         Restaurant restaurant = restaurantRepo.findById(restaurantId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (userHasReservationOnSameDay(user, reservationTime)) {
+        if (userHasReservationOnSameDay(user, reservationStartTime)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already has a reservation on this day.");
         }
 
-        RestaurantTable availableTable = findAvailableTableForPartySize(restaurant, reservationTime, numberOfPeople);
+        RestaurantTable availableTable = findAvailableTableForPartySize(restaurant, reservationStartTime, reservationEndTime, numberOfPeople);
 
-        availableTable.setAvailable(false);
-        tableRepo.save(availableTable);
-
-        Reservation newReservation = new Reservation(restaurant, user, reservationTime, numberOfPeople);
+        Reservation newReservation = new Reservation(restaurant, user, reservationStartTime, reservationEndTime, numberOfPeople);
         newReservation.setTable(availableTable);
         return reservationRepo.save(newReservation);
     }
 
-    private RestaurantTable findAvailableTableForPartySize(Restaurant restaurant, LocalDateTime reservationTime, Integer numberOfPeople) {
+    private RestaurantTable findAvailableTableForPartySize(Restaurant restaurant,
+                                                           LocalDateTime reservationStartTime,
+                                                           LocalDateTime reservationEndTime,
+                                                           Integer numberOfPeople) {
         List<RestaurantTable> availableTables = restaurant.getTables().stream()
                 .filter(table -> table.getCapacity() >= numberOfPeople)
-                .filter(table -> isTableAvailableAtTime(table, reservationTime))
+                .filter(table -> isTableAvailableForHour(table, reservationStartTime, reservationEndTime))
                 .collect(Collectors.toList());
 
         if (availableTables.isEmpty()) {
@@ -88,6 +89,19 @@ public class ReservationService {
                 .min(Comparator.comparingInt(RestaurantTable::getCapacity))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "No suitable tables found."));
+    }
+
+    private boolean isTableAvailableForHour(RestaurantTable table,
+                                            LocalDateTime reservationStartTime,
+                                            LocalDateTime reservationEndTime) {
+        List<Reservation> conflictingReservations = reservationRepo
+                .findReservationsConflictingWithTimeSlot(
+                        table.getId(),
+                        reservationStartTime,
+                        reservationEndTime
+                );
+
+        return conflictingReservations.isEmpty();
     }
 
     private boolean isTableAvailableAtTime(RestaurantTable table, LocalDateTime reservationTime) {

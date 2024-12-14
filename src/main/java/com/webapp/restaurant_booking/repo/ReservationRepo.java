@@ -12,14 +12,19 @@ public interface ReservationRepo extends JpaRepository<Reservation, Long> {
     List<Reservation> findByUserId(Long userId);
     List<Reservation> findByRestaurantId(Long restaurantId);
 
-	@Query("SELECT r FROM Reservation r WHERE r.restaurant.id = :restaurantId AND r.reservationTime = :time")
-    List<Reservation> findReservationsByRestaurantAndTime(@Param("restaurantId") Long restaurantId, @Param("time") LocalDateTime time);
-
     @Query("SELECT r FROM Reservation r WHERE r.restaurant.id = :restaurantId " +
-            "AND r.reservationTime BETWEEN :start AND :end")
+            "AND r.reservationStartTime BETWEEN :start AND :end")
     List<Reservation> findReservationsByRestaurantAndTimeBetween(
             @Param("restaurantId") Long restaurantId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
+    );
+
+    @Query("SELECT r FROM Reservation r WHERE r.table.id = :tableId AND " +
+            "((r.reservationStartTime < :endTime AND r.reservationEndTime > :startTime))")
+    List<Reservation> findReservationsConflictingWithTimeSlot(
+            @Param("tableId") Long tableId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime
     );
 }
