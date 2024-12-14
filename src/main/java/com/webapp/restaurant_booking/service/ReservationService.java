@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -36,6 +37,14 @@ public class ReservationService {
     @Autowired
     private RestaurantRepo restaurantRepo;
 
+    private boolean userHasReservationOnSameDay(User user, LocalDateTime reservationTime) {
+        LocalDate reservationDate = reservationTime.toLocalDate();
+        List<Reservation> userReservations = reservationRepo.findByUserId(user.getId());
+
+        return userReservations.stream()
+                .anyMatch(reservation -> reservation.getReservationTime().toLocalDate().isEqual(reservationDate));
+    }
+
     @Transactional
     public Reservation addReservation(Map<String, Object> body) {
         Long restaurantId = ((Number) body.get("restaurantId")).longValue();
@@ -49,6 +58,10 @@ public class ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if (userHasReservationOnSameDay(user, reservationTime)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already has a reservation on this day.");
+        }
 
         RestaurantTable availableTable = findAvailableTableForPartySize(restaurant, reservationTime, numberOfPeople);
 
