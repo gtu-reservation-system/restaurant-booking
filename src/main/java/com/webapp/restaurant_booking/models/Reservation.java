@@ -31,7 +31,19 @@ public class Reservation {
     @Column(nullable = false)
 	private Integer numberOfPeople;
 
+    @Column
+    private String allergy;
+
     public Reservation() {
+    }
+
+    public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople, String allergy) {
+        this.restaurant = restaurant;
+        this.user = user;
+        this.reservationStartTime= reservationStartTime;
+        this.reservationEndTime= reservationEndTime;
+        this.numberOfPeople = numberOfPeople;
+        this.allergy= allergy;
     }
 
     public Reservation(Restaurant restaurant, User user, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, Integer numberOfPeople) {
@@ -97,4 +109,13 @@ public class Reservation {
     public void setNumberOfPeople(Integer numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
     }
+
+    public String getAllergy() {
+        return allergy;
+    }
+
+    public void setAllergy(String allergy) {
+        this.allergy = allergy;
+    }
+
 }
