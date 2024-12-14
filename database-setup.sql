@@ -119,7 +119,7 @@ INSERT INTO restaurant_table (id, name, available, restaurant_id, capacity) VALU
 -- Insert Reservations
 INSERT INTO reservation (id, restaurant_id, user_id, table_id, reservation_start_time, reservation_end_time, number_of_people, allergy, tag) VALUES
     (1, 1, 1, 1, '2024-12-15 18:00:00', '2024-12-15 19:00:00', 4, 'peanuts', 'birthday'),
-    (2, 2, 2, 4, '2024-12-16 19:30:00', '2024-12-16 20:30:00', 2, null, , null),
+    (2, 2, 2, 4, '2024-12-16 19:30:00', '2024-12-16 20:30:00', 2, null, null),
     (3, 3, 3, 7, '2024-12-17 20:00:00', '2024-12-17 21:00:00', 3, null, null),
     (4, 4, 4, 9, '2024-12-18 19:00:00', '2024-12-18 20:00:00', 5, 'dairy', null),
     (5, 5, 5, 11, '2024-12-19 18:30:00', '2024-12-19 19:30:00', 2, null, 'anniversary'),
