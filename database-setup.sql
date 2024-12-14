@@ -93,37 +93,37 @@ INSERT INTO restaurant_photos (restaurant_id, photo_path) VALUES
 
 -- Insert Tables for Restaurants
 INSERT INTO restaurant_table (id, name, available, restaurant_id, capacity) VALUES
-    (1, 'Table 1', true, 1, 6),
-    (2, 'Table 2', true, 1, 6),
-    (3, 'Table 3', false, 1, 6),
+    (1, 'Table 1', true, 1, 2),
+    (2, 'Table 2', true, 1, 4),
+    (3, 'Table 3', true, 1, 6),
     (4, 'Table 1', true, 2, 6),
     (5, 'Table 2', true, 2, 6),
-    (6, 'Table 3', false, 2, 4),
+    (6, 'Table 3', true, 2, 4),
     (7, 'Table 1', true, 3, 4),
     (8, 'Table 2', true, 3, 4),
     (9, 'Table 1', true, 4, 4),
-    (10, 'Table 2', false, 4, 4),
+    (10, 'Table 2', true, 4, 4),
     (11, 'Table 1', true, 5, 4),
     (12, 'Table 2', true, 5, 4),
     (13, 'Table 1', true, 6, 4),
-    (14, 'Table 2', false, 6, 2),
+    (14, 'Table 2', true, 6, 2),
     (15, 'Table 1', true, 7, 2),
     (16, 'Table 2', true, 7, 2),
     (17, 'Table 1', true, 8, 2),
-    (18, 'Table 2', false, 8, 2),
+    (18, 'Table 2', true, 8, 2),
     (19, 'Table 1', true, 9, 2),
     (20, 'Table 2', true, 9, 2),
     (21, 'Table 1', true, 10, 2),
-    (22, 'Table 2', false, 10, 2);
+    (22, 'Table 2', true, 10, 2);
 
 -- Insert Reservations
-INSERT INTO reservation (id, restaurant_id, user_id, table_id, reservation_time, number_of_people) VALUES
-    (1, 1, 1, 1, '2024-12-15 18:00:00', 4),
-    (2, 2, 2, 4, '2024-12-16 19:30:00', 2),
-    (3, 3, 3, 7, '2024-12-17 20:00:00', 3),
-    (4, 4, 4, 9, '2024-12-18 19:00:00', 5),
-    (5, 5, 5, 11, '2024-12-19 18:30:00', 2),
-    (6, 6, 6, 13, '2024-12-20 20:30:00', 4);
+INSERT INTO reservation (id, restaurant_id, user_id, table_id, reservation_start_time, reservation_end_time, number_of_people) VALUES
+    (1, 1, 1, 1, '2024-12-15 18:00:00', '2024-12-15 19:00:00', 4),
+    (2, 2, 2, 4, '2024-12-16 19:30:00', '2024-12-16 20:30:00', 2),
+    (3, 3, 3, 7, '2024-12-17 20:00:00', '2024-12-17 21:00:00', 3),
+    (4, 4, 4, 9, '2024-12-18 19:00:00', '2024-12-18 20:00:00', 5),
+    (5, 5, 5, 11, '2024-12-19 18:30:00', '2024-12-19 19:30:00', 2),
+    (6, 6, 6, 13, '2024-12-20 20:30:00', '2024-12-20 21:30:00', 4);
 
 -- Insert Menu Items
 INSERT INTO menu_item (restaurant_id, name, description, price) VALUES
