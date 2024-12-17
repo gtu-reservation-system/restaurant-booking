@@ -21,6 +21,9 @@ public class Comment {
     @JsonManagedReference
     private User user;
 
+    @Column(nullable = true)
+    private String restaurantName;
+
     @Column(nullable = false, length = 500)
     private String comment;
 
@@ -34,12 +37,13 @@ public class Comment {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Comment(Restaurant restaurant, User user, String comment, Integer rating) {
+    public Comment(Restaurant restaurant, User user, String comment, Integer rating, String restaurantName) {
         this.restaurant = restaurant;
         this.user = user;
         this.comment = comment;
         this.rating = rating;
         this.createdAt = LocalDateTime.now();
+        this.restaurantName = restaurantName;
     }
 
     public Long getId() {
@@ -88,5 +92,13 @@ public class Comment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getrestaurantName() {
+        return restaurantName;
+    }
+
+    public void setrestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 }

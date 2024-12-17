@@ -34,13 +34,17 @@ public class CommentService {
         Long userId = ((Number) body.get("userId")).longValue();
         String comment = (String) body.get("comment");
         Integer rating = ((Number) body.get("rating")).intValue();
+        Restaurant restaurant = restaurantRepo.findById(restaurantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+        String restaurantName = restaurant.getName();
+        if (restaurantName == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Restaurant name cannot be null");
+        }
 
         if (rating < 1 || rating > 5) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
         }
 
-        Restaurant restaurant = restaurantRepo.findById(restaurantId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -51,7 +55,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment cannot exceed 500 characters");
         }
 
-        Comment newComment = new Comment(restaurant, user, comment, rating);
+        Comment newComment = new Comment(restaurant, user, comment, rating, restaurantName);
         return commentRepo.save(newComment);
     }
 
