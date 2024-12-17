@@ -36,22 +36,22 @@ VALUES
 (10, 'Dim Sum Palace', '579 Dumpling Street, Chinatown', '012-345-6789', 'dimsumpalace@example.com', 'password123', '10:30 AM - 9:30 PM', true, true, true, false, 'Terms for Dim Sum Palace', 'dimsumpalace_logo.png', 'http://www.dimsumpalace.com');
 
 -- Insert Comments
-INSERT INTO comment (id, user_id, restaurant_id, rating, comment, created_at) VALUES
-	(1, 2, 1, 5, 'Amazing food and great service!', '2024-12-01 12:00:00'),
-	(2, 4, 2, 5, 'The steak was cooked to perfection.', '2024-12-02 14:30:00'),
-	(3, 6, 1, 4, 'A bit pricey but worth it.', '2024-12-03 18:45:00'),
-	(4, 1, 3, 3, 'Service could be improved.', '2024-12-04 19:00:00'),
-	(5, 3, 4, 4, 'Loved the ambiance!', '2024-12-05 20:30:00'),
-	(6, 2, 4, 5, 'Best dining experience ever!', '2024-12-06 21:15:00'),
-	(7, 5, 5, 4, 'Will visit again soon.', '2024-12-07 13:25:00'),
-	(8, 4, 6, 3, 'Small portions but tasty food.', '2024-12-08 14:10:00'),
-	(9, 6, 7, 4, 'Staff was very friendly.', '2024-12-09 17:45:00'),
-	(10, 1, 8, 2, 'Food was a bit salty.', '2024-12-10 12:50:00'),
-	(11, 3, 9, 5, 'Highly recommend this place!', '2024-12-11 16:40:00'),
-	(12, 5, 10, 4, 'Great experience for our anniversary.', '2024-12-12 18:30:00'),
-	(13, 2, 3, 4, 'Drinks were amazing.', '2024-12-13 19:20:00'),
-	(14, 4, 7, 2, 'Dessert selection is small', '2024-12-14 20:10:00'),
-	(15, 6, 4, 1, 'Worst restaurant in town!', '2024-12-15 21:00:00');
+INSERT INTO comment (id, user_id, restaurant_id, rating, comment, created_at, restaurant_name) VALUES
+	(1, 2, 1, 5, 'Amazing food and great service!', '2024-12-01 12:00:00', 'The Great Steakhouse'),
+	(2, 4, 2, 5, 'The steak was cooked to perfection.', '2024-12-02 14:30:00', 'Ocean Breeze Seafood'),
+	(3, 6, 1, 4, 'A bit pricey but worth it.', '2024-12-03 18:45:00', 'The Great Steakhouse'),
+	(4, 1, 3, 3, 'Service could be improved.', '2024-12-04 19:00:00', 'Mountain Retreat Cafe'),
+	(5, 3, 4, 4, 'Loved the ambiance!', '2024-12-05 20:30:00', 'Spice Kingdom Indian Cuisine'),
+	(6, 2, 4, 5, 'Best dining experience ever!', '2024-12-06 21:15:00', 'Spice Kingdom Indian Cuisine'),
+	(7, 5, 5, 4, 'Will visit again soon.', '2024-12-07 13:25:00', 'Green Leaf Vegetarian Bistro'),
+	(8, 4, 6, 3, 'Small portions but tasty food.', '2024-12-08 14:10:00', 'Pasta Paradise'),
+	(9, 6, 7, 4, 'Staff was very friendly.', '2024-12-09 17:45:00', 'Sushi Sensation'),
+	(10, 1, 8, 2, 'Food was a bit salty.', '2024-12-10 12:50:00', 'Burger Bliss'),
+	(11, 3, 9, 5, 'Highly recommend this place!', '2024-12-11 16:40:00', 'Mediterranean Delights'),
+	(12, 5, 10, 4, 'Great experience for our anniversary.', '2024-12-12 18:30:00', 'Dim Sum Palace'),
+	(13, 2, 3, 4, 'Drinks were amazing.', '2024-12-13 19:20:00', 'Mountain Retreat Cafe'),
+	(14, 4, 7, 2, 'Dessert selection is small', '2024-12-14 20:10:00', 'Sushi Sensation'),
+	(15, 6, 4, 1, 'Worst restaurant in town!', '2024-12-15 21:00:00', 'Spice Kingdom Indian Cuisine');
 
 -- Insert Restaurant Tags
 INSERT INTO restaurant_tags (restaurant_id, tag) VALUES
