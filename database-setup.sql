@@ -53,6 +53,31 @@ INSERT INTO comment (id, user_id, restaurant_id, rating, comment, created_at, re
 	(14, 4, 7, 2, 'Dessert selection is small', '2024-12-14 20:10:00', 'Sushi Sensation'),
 	(15, 6, 4, 1, 'Worst restaurant in town!', '2024-12-15 21:00:00', 'Spice Kingdom Indian Cuisine');
 
+-- Insert Favorites
+INSERT INTO favorite (id, user_id, restaurant_id) VALUES
+	(1, 1, 1),
+	(1, 1, 2),
+	(1, 1, 4),
+	(1, 1, 7),
+	(1, 1, 9),
+	(1, 2, 1),
+	(1, 2, 6),
+	(1, 2, 10),
+	(1, 3, 3),
+	(1, 3, 8),
+	(1, 3, 5),
+	(1, 4, 8),
+	(1, 6, 1),
+	(1, 6, 2),
+	(1, 6, 3),
+	(1, 6, 4),
+	(1, 6, 5),
+	(1, 6, 6),
+	(1, 6, 7),
+	(1, 6, 8),
+	(1, 6, 9),
+	(1, 6, 10);
+
 -- Insert Restaurant Tags
 INSERT INTO restaurant_tags (restaurant_id, tag) VALUES
     (1, 'Steakhouse'),
