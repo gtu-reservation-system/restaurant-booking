@@ -39,7 +39,9 @@ public class FavoriteService {
         User user = userRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Restaurant restaurant = restaurantRepo.findById(restaurantId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
 
-        Favorite newFavorite = new Favorite(user, restaurant);
+        String restaurantName = restaurant.getName();
+
+        Favorite newFavorite = new Favorite(user, restaurant, restaurantName);
         return favoriteRepo.save(newFavorite);
     }
 
