@@ -54,29 +54,29 @@ INSERT INTO comment (id, user_id, restaurant_id, rating, comment, created_at, re
 	(15, 6, 4, 1, 'Worst restaurant in town!', '2024-12-15 21:00:00', 'Spice Kingdom Indian Cuisine');
 
 -- Insert Favorites
-INSERT INTO favorite (id, user_id, restaurant_id) VALUES
-	(1, 1, 1),
-	(1, 1, 2),
-	(1, 1, 4),
-	(1, 1, 7),
-	(1, 1, 9),
-	(1, 2, 1),
-	(1, 2, 6),
-	(1, 2, 10),
-	(1, 3, 3),
-	(1, 3, 8),
-	(1, 3, 5),
-	(1, 4, 8),
-	(1, 6, 1),
-	(1, 6, 2),
-	(1, 6, 3),
-	(1, 6, 4),
-	(1, 6, 5),
-	(1, 6, 6),
-	(1, 6, 7),
-	(1, 6, 8),
-	(1, 6, 9),
-	(1, 6, 10);
+INSERT INTO favorite (user_id, restaurant_id, restaurant_name) VALUES
+	(1, 1, 'The Great Steakhouse'),
+	(1, 2, 'Ocean Breeze Seafood'),
+	(1, 4, 'Spice Kingdom Indian Cuisine'),
+	(1, 7, 'Sushi Sensation'),
+	(1, 9, 'Mediterranean Delights'),
+	(2, 1, 'The Great Steakhouse'),
+	(2, 6, 'Pasta Paradise'),
+	(2, 10, 'Dim Sum Palace'),
+	(3, 3, 'Mountain Retreat Cafe'),
+	(3, 8, 'Burger Bliss'),
+	(3, 5, 'Green Leaf Vegetarian Bistro'),
+	(4, 8, 'Burger Bliss'),
+	(6, 1, 'The Great Steakhouse'),
+	(6, 2, 'Ocean Breeze Seafood'),
+	(6, 3, 'Mountain Retreat Cafe'),
+	(6, 4, 'Spice Kingdom Indian Cuisine'),
+	(6, 5, 'Green Leaf Vegetarian Bistro'),
+	(6, 6, 'Pasta Paradise'),
+	(6, 7, 'Sushi Sensation'),
+	(6, 8, 'Burger Bliss'),
+	(6, 9, 'Mediterranean Delights'),
+	(6, 10, 'Dim Sum Palace');
 
 -- Insert Restaurant Tags
 INSERT INTO restaurant_tags (restaurant_id, tag) VALUES
