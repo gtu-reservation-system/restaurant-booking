@@ -8,6 +8,7 @@ TRUNCATE TABLE restaurant_table;
 TRUNCATE TABLE menu_item;
 TRUNCATE TABLE restaurant;
 TRUNCATE TABLE comment;
+TRUNCATE TABLE favorite;
 TRUNCATE TABLE user;
 SET FOREIGN_KEY_CHECKS = 1;
 
