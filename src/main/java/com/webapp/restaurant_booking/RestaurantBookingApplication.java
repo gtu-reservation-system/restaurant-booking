@@ -10,6 +10,3 @@ public class RestaurantBookingApplication {
 		SpringApplication.run(RestaurantBookingApplication.class, args);
 	}
 }
-
-//TODO add reservation reminder
-//TODO add reservation approving

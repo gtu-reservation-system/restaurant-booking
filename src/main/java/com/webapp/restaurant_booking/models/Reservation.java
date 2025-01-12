@@ -37,6 +37,10 @@ public class Reservation {
     @Column
     private String tag;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReservationStatus status = ReservationStatus.PENDING;
+
     public Reservation() {
     }
 
@@ -128,5 +132,13 @@ public class Reservation {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
     }
 }

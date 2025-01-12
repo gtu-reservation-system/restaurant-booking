@@ -1,5 +1,6 @@
 package com.webapp.restaurant_booking.controller;
 
+import com.webapp.restaurant_booking.models.*;
 import com.webapp.restaurant_booking.models.Reservation;
 import com.webapp.restaurant_booking.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,24 @@ public class ReservationApiController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing reservation: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Reservation> updateReservationStatus(
+            @PathVariable("id") Long id,
+            @RequestBody Map<String, String> body) {
+        try {
+            String statusStr = body.get("status");
+            if (statusStr == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is required");
+            }
+
+            ReservationStatus newStatus = ReservationStatus.valueOf(statusStr.toUpperCase());
+            Reservation updatedReservation = reservationService.updateReservationStatus(id, newStatus);
+            return ResponseEntity.ok(updatedReservation);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status value");
         }
     }
 
