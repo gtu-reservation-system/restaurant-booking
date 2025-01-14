@@ -1,9 +1,6 @@
 package com.webapp.restaurant_booking.service;
 
-import com.webapp.restaurant_booking.models.Reservation;
-import com.webapp.restaurant_booking.models.Restaurant;
-import com.webapp.restaurant_booking.models.RestaurantTable;
-import com.webapp.restaurant_booking.models.User;
+import com.webapp.restaurant_booking.models.*;
 import com.webapp.restaurant_booking.repo.ReservationRepo;
 import com.webapp.restaurant_booking.repo.RestaurantRepo;
 import com.webapp.restaurant_booking.repo.TableRepo;
@@ -46,6 +43,33 @@ public class ReservationService {
     }
 
     @Transactional
+    public Reservation updateReservationStatus(Long reservationId, ReservationStatus newStatus) {
+        Reservation reservation = reservationRepo.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found"));
+
+        if (newStatus == ReservationStatus.REJECTED && reservation.getStatus() == ReservationStatus.APPROVED) {
+            RestaurantTable table = reservation.getTable();
+            if (table != null) {
+                table.setAvailable(true);
+                tableRepo.save(table);
+            }
+        }
+
+        if (newStatus == ReservationStatus.APPROVED && reservation.getStatus() == ReservationStatus.PENDING) {
+            RestaurantTable table = reservation.getTable();
+            if (table != null && !isTableAvailableForHour(table,
+                    reservation.getReservationStartTime(),
+                    reservation.getReservationEndTime())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Table is no longer available for this time slot");
+            }
+        }
+
+        reservation.setStatus(newStatus);
+        return reservationRepo.save(reservation);
+    }
+
+    @Transactional
     public Reservation addReservation(Map<String, Object> body) {
         Long restaurantId = ((Number) body.get("restaurantId")).longValue();
         Long userId = ((Number) body.get("userId")).longValue();
@@ -70,6 +94,7 @@ public class ReservationService {
 
         Reservation newReservation = new Reservation(restaurant, user, reservationStartTime, reservationEndTime, numberOfPeople, allergy, tag);
         newReservation.setTable(availableTable);
+        newReservation.setStatus(ReservationStatus.PENDING);
         return reservationRepo.save(newReservation);
     }
 
