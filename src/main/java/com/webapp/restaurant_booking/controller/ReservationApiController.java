@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/reservations")
 @RestController
 public class ReservationApiController {
