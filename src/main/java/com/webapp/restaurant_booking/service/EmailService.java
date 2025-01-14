@@ -36,7 +36,7 @@ public class EmailService {
                             Please note that this token will expire in 15 minutes. If you did not request this, you can ignore this email.
                         </p>
                         <p style="color: #999999; text-align: center; font-size: 12px; margin-top: 20px;">
-                            &copy; 2025 Your Company. All rights reserved.
+                            &copy; 2025 Rezerve. All rights reserved.
                         </p>
                     </div>
                 </body>
