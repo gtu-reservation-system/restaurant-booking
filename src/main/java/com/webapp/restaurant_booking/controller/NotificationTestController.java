@@ -16,7 +16,7 @@ public class NotificationTestController {
     private ReservationNotificationService notificationService;
 
     @PostMapping("/test-reminder-notification")
-    public ResponseEntity<String> testDailyReminders() {
+    public ResponseEntity<String> testReminderNotification() {
         try {
             notificationService.sendReservationReminders();
             return ResponseEntity.ok("Daily reminders sent successfully");
@@ -25,4 +25,12 @@ public class NotificationTestController {
                     .body("Error sending reminders: " + e.getMessage());
         }
     }
+    /*
+    @PostMapping("/test-approved-notification")
+    public ResponseEntity<String> testApprovedNotification() {
+        try {
+
+        }
+    }
+    */
 }

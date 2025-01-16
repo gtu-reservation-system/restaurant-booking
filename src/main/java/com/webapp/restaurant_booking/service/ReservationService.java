@@ -34,6 +34,9 @@ public class ReservationService {
     @Autowired
     private RestaurantRepo restaurantRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     private boolean userHasReservationOnSameDay(User user, LocalDateTime reservationTime) {
         LocalDate reservationDate = reservationTime.toLocalDate();
         List<Reservation> userReservations = reservationRepo.findByUserId(user.getId());
@@ -47,16 +50,24 @@ public class ReservationService {
         Reservation reservation = reservationRepo.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found"));
 
-        if (newStatus == ReservationStatus.REJECTED && reservation.getStatus() == ReservationStatus.APPROVED) {
-            RestaurantTable table = reservation.getTable();
-            if (table != null) {
-                table.setAvailable(true);
-                tableRepo.save(table);
-            }
-        }
-
         reservation.setStatus(newStatus);
-        return reservationRepo.save(reservation);
+        Reservation savedReservation = reservationRepo.save(reservation);
+
+        try {
+            if (newStatus == ReservationStatus.APPROVED) {
+                emailService.sendReservationApprovedEmail(
+                        reservation.getUser().getEmail(),
+                        reservation.getRestaurant().getName(),
+                        reservation.getReservationStartTime(),
+                        reservation.getNumberOfPeople(),
+                        reservation.getAllergy(),
+                        reservation.getTag()
+                );
+            }
+        } catch(Exception e) {
+            System.err.println("Failed to send status update email: " + e.getMessage());
+        }
+        return savedReservation;
     }
 
     @Transactional
