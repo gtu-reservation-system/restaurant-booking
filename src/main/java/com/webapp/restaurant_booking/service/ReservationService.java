@@ -55,16 +55,6 @@ public class ReservationService {
             }
         }
 
-        if (newStatus == ReservationStatus.APPROVED && reservation.getStatus() == ReservationStatus.PENDING) {
-            RestaurantTable table = reservation.getTable();
-            if (table != null && !isTableAvailableForHour(table,
-                    reservation.getReservationStartTime(),
-                    reservation.getReservationEndTime())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Table is no longer available for this time slot");
-            }
-        }
-
         reservation.setStatus(newStatus);
         return reservationRepo.save(reservation);
     }
