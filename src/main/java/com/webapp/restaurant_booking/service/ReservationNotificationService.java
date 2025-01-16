@@ -19,9 +19,9 @@ public class ReservationNotificationService {
     @Autowired
     private EmailService emailService;
 
-    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
     public void sendReservationReminders() {
-        LocalDateTime start = LocalDateTime.now().plusHours(23);
+        LocalDateTime start = LocalDateTime.now().plusHours(23).plusMinutes(55);
         LocalDateTime end = LocalDateTime.now().plusHours(24);
 
         List<Reservation> upcomingReservations = reservationRepo.findByReservationStartTimeBetweenAndStatus(
